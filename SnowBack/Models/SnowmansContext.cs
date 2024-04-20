@@ -15,6 +15,8 @@ public partial class SnowmansContext : DbContext
     {
     }
 
+    public virtual DbSet<DAuthentication> DAuthentications { get; set; }
+
     public virtual DbSet<DDfieldsType> DDfieldsTypes { get; set; }
 
     public virtual DbSet<DEmployeesDetail> DEmployeesDetails { get; set; }
@@ -67,6 +69,19 @@ public partial class SnowmansContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<DAuthentication>(entity =>
+        {
+            entity.ToTable("D_Authentication");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Login)
+                .HasMaxLength(50)
+                .HasColumnName("login");
+            entity.Property(e => e.Password)
+                .HasMaxLength(50)
+                .HasColumnName("password");
+        });
+
         modelBuilder.Entity<DDfieldsType>(entity =>
         {
             entity
