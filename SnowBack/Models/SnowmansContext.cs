@@ -84,20 +84,19 @@ public partial class SnowmansContext : DbContext
 
         modelBuilder.Entity<DDfieldsType>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("D_DFields_Types");
+            entity.ToTable("D_DFields_Types");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Code)
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("code");
+            entity.Property(e => e.Description)
+                .HasMaxLength(512)
+                .HasColumnName("description");
             entity.Property(e => e.Guid)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("guid");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Name)
                 .HasMaxLength(512)
                 .HasColumnName("name");
@@ -241,10 +240,9 @@ public partial class SnowmansContext : DbContext
 
         modelBuilder.Entity<DInfraElement>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("D_Infra_Elements");
+            entity.ToTable("D_Infra_Elements");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Code)
                 .HasMaxLength(15)
                 .IsUnicode(false)
@@ -257,9 +255,6 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Guid)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("guid");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Inventorycode)
                 .HasMaxLength(15)
                 .IsUnicode(false)
@@ -268,14 +263,18 @@ public partial class SnowmansContext : DbContext
                 .HasMaxLength(512)
                 .HasColumnName("name");
             entity.Property(e => e.Type).HasColumnName("type");
+
+            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElements)
+                .HasForeignKey(d => d.Type)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_D_Infra_Elements_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsField>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("D_Infra_Elements_Fields");
+            entity.ToTable("D_Infra_Elements_Fields");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Code)
                 .HasMaxLength(15)
                 .IsUnicode(false)
@@ -283,42 +282,51 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Dateon)
                 .HasColumnType("datetime")
                 .HasColumnName("dateon");
+            entity.Property(e => e.FieldType).HasColumnName("field_type");
             entity.Property(e => e.Guid)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("guid");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Name)
                 .HasMaxLength(512)
                 .HasColumnName("name");
-            entity.Property(e => e.Typecode)
-                .HasMaxLength(15)
-                .IsUnicode(false)
-                .HasColumnName("typecode");
+            entity.Property(e => e.Type).HasColumnName("type");
             entity.Property(e => e.Value).HasColumnName("value");
+
+            entity.HasOne(d => d.FieldTypeNavigation).WithMany(p => p.DInfraElementsFields)
+                .HasForeignKey(d => d.FieldType)
+                .HasConstraintName("FK_D_Infra_Elements_Fields_D_DFields_Types");
+
+            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElementsFields)
+                .HasForeignKey(d => d.Type)
+                .HasConstraintName("FK_D_Infra_Elements_Fields_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsFunction>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("D_Infra_Elements_Functions");
+            entity.ToTable("D_Infra_Elements_Functions");
 
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
             entity.Property(e => e.Code)
                 .HasMaxLength(15)
                 .IsUnicode(false)
                 .HasColumnName("code");
             entity.Property(e => e.Description).HasColumnName("description");
-            entity.Property(e => e.Elementid)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("elementid");
             entity.Property(e => e.Guid)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("guid");
             entity.Property(e => e.Name)
                 .HasMaxLength(512)
                 .HasColumnName("name");
+            entity.Property(e => e.Type)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("type");
+
+            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElementsFunctions)
+                .HasForeignKey(d => d.Type)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_D_Infra_Elements_Functions_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsParent>(entity =>
@@ -339,10 +347,9 @@ public partial class SnowmansContext : DbContext
 
         modelBuilder.Entity<DInfraElementsType>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("D_Infra_Elements_Types");
+            entity.ToTable("D_Infra_Elements_Types");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Code)
                 .HasMaxLength(15)
                 .IsUnicode(false)
@@ -353,16 +360,10 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Guid)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("guid");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Name)
                 .HasMaxLength(512)
                 .IsUnicode(false)
                 .HasColumnName("name");
-            entity.Property(e => e.Type)
-                .IsUnicode(false)
-                .HasColumnName("type");
         });
 
         modelBuilder.Entity<DKbDoc>(entity =>
@@ -401,10 +402,9 @@ public partial class SnowmansContext : DbContext
 
         modelBuilder.Entity<DStaff>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("D_Staff");
+            entity.ToTable("D_Staff");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CallId)
                 .HasMaxLength(15)
                 .IsFixedLength()
@@ -418,9 +418,6 @@ public partial class SnowmansContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("email");
             entity.Property(e => e.Guid).HasColumnName("guid");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Lastname)
                 .HasMaxLength(512)
                 .IsUnicode(false)
@@ -441,10 +438,9 @@ public partial class SnowmansContext : DbContext
 
         modelBuilder.Entity<DTask>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("D_Tasks");
+            entity.ToTable("D_Tasks");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Code)
                 .HasMaxLength(15)
                 .IsFixedLength()
@@ -454,9 +450,6 @@ public partial class SnowmansContext : DbContext
                 .HasColumnName("created");
             entity.Property(e => e.Duration).HasColumnName("duration");
             entity.Property(e => e.Guid).HasColumnName("guid");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Name)
                 .HasMaxLength(512)
                 .IsUnicode(false)
@@ -574,10 +567,9 @@ public partial class SnowmansContext : DbContext
 
         modelBuilder.Entity<JTask>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("J_Tasks");
+            entity.ToTable("J_Tasks");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Creator).HasColumnName("creator");
             entity.Property(e => e.Dateoff)
                 .HasColumnType("datetime")
@@ -592,10 +584,12 @@ public partial class SnowmansContext : DbContext
                 .HasColumnName("emergency");
             entity.Property(e => e.Executor).HasColumnName("executor");
             entity.Property(e => e.Guid).HasColumnName("guid");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Task).HasColumnName("task");
+
+            entity.HasOne(d => d.ExecutorNavigation).WithMany(p => p.JTasks)
+                .HasForeignKey(d => d.Executor)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_executor");
         });
 
         modelBuilder.Entity<JTransportFueling>(entity =>

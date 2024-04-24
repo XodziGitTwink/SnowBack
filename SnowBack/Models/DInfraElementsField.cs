@@ -13,9 +13,15 @@ public partial class DInfraElementsField
 
     public string? Code { get; set; }
 
-    public string? Typecode { get; set; }
+    public int? Type { get; set; }
 
     public DateTime? Dateon { get; set; }
 
     public string? Value { get; set; }
+
+    public int? FieldType { get; set; }
+
+    public virtual DDfieldsType? FieldTypeNavigation { get; set; }
+
+    public virtual DInfraElementsType? TypeNavigation { get; set; }
 }

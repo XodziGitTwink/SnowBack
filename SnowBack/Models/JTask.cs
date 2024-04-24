@@ -22,4 +22,6 @@ public partial class JTask
     public string Emergency { get; set; } = null!;
 
     public int Creator { get; set; }
+
+    public virtual DStaff ExecutorNavigation { get; set; } = null!;
 }

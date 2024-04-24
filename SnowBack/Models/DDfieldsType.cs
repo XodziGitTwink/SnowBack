@@ -12,4 +12,8 @@ public partial class DDfieldsType
     public string? Name { get; set; }
 
     public string? Code { get; set; }
+
+    public string? Description { get; set; }
+
+    public virtual ICollection<DInfraElementsField> DInfraElementsFields { get; set; } = new List<DInfraElementsField>();
 }

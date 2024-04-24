@@ -5,7 +5,9 @@ namespace SnowBack.Models;
 
 public partial class DInfraElementsFunction
 {
-    public int Elementid { get; set; }
+    public int Id { get; set; }
+
+    public int Type { get; set; }
 
     public Guid Guid { get; set; }
 
@@ -14,4 +16,6 @@ public partial class DInfraElementsFunction
     public string Code { get; set; } = null!;
 
     public string? Description { get; set; }
+
+    public virtual DInfraElementsType TypeNavigation { get; set; } = null!;
 }
