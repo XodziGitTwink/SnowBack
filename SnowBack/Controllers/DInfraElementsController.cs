@@ -18,9 +18,11 @@ namespace SnowBack.Controllers
             _context = context;
         }
 
+        #region GET
+
         // GET: DInfraElements
         [HttpGet]
-        [Route("infra/index")]
+        [Route("infra/elements/index")]
         public async Task<List<DInfraElement>> Index()
         {
            // var snowmansContext = _context.DInfraElements.Include(d => d.TypeNavigation);
@@ -30,35 +32,47 @@ namespace SnowBack.Controllers
         }
 
         // GET: DInfraElements/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet]
+        [Route("infra/elements/index/{id}")]
+        public async Task<DInfraElement> Details(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return null;
             }
 
             var dInfraElement = await _context.DInfraElements
-                .Include(d => d.TypeNavigation)
+                //.Include(d => d.TypeNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
             if (dInfraElement == null)
             {
-                return NotFound();
+                return null;
             }
-
-            return View(dInfraElement);
+            var fields = await _context.DInfraElementsFields.Where(x => x.Type == dInfraElement.Type).ToListAsync();
+            return dInfraElement;
         }
 
-        // GET: DInfraElements/Create
-        public IActionResult Create()
+        [HttpGet]
+        [Route("infra/elements/get")]
+        public async Task<List<DInfraElementWithFields>> IndexFields()
         {
-            ViewData["Type"] = new SelectList(_context.DInfraElementsTypes, "Id", "Id");
-            return View();
-        }
+            var elements = await _context.DInfraElements.ToListAsync();
+            List<DInfraElementWithFields> elements_with_fields = new List<DInfraElementWithFields>();
 
-        // POST: DInfraElements/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+            foreach (var elem in elements)
+            {
+                var fields = await _context.DInfraElementsFields.Where(x => x.Type == elem.Type).ToListAsync();
+                elements_with_fields.Add(new DInfraElementWithFields { Element = elem, DInfraElementsFields = fields });
+            }
+            return elements_with_fields;
+            
+        }
+        #endregion
+
+        #region Create
         [HttpPost]
+        [Route("infra/create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Guid,Name,Code,Inventorycode,Gps,Type,Description")] DInfraElement dInfraElement)
         {
@@ -89,43 +103,25 @@ namespace SnowBack.Controllers
             return View(dInfraElement);
         }
 
-        // POST: DInfraElements/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Guid,Name,Code,Inventorycode,Gps,Type,Description")] DInfraElement dInfraElement)
+        [Route("infra/addproperty/")]
+        public async Task<IActionResult> AddProperty([Bind("Id,Guid,Name,Code,Type,Dateon,Value,FieldType")] DInfraElementsField dInfraElementsField)
         {
-            if (id != dInfraElement.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(dInfraElement);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DInfraElementExists(dInfraElement.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Add(dInfraElementsField);
+                await _context.SaveChangesAsync();
+                return Ok();
+                //return RedirectToAction(nameof(Index));
             }
-            ViewData["Type"] = new SelectList(_context.DInfraElementsTypes, "Id", "Id", dInfraElement.Type);
-            return View(dInfraElement);
+            ViewData["FieldType"] = new SelectList(_context.DDfieldsTypes, "Id", "Id", dInfraElementsField.FieldType);
+            ViewData["Type"] = new SelectList(_context.DInfraElementsTypes, "Id", "Id", dInfraElementsField.Type);
+            return NotFound();
         }
 
-        // GET: DInfraElements/Delete/5
+        #endregion
+
+        #region Delete
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -158,6 +154,8 @@ namespace SnowBack.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        #endregion
 
         private bool DInfraElementExists(int id)
         {
