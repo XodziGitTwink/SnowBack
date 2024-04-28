@@ -1,4 +1,4 @@
-@SnowBack_HostAddress = http://localhost:5148
+@SnowBack_HostAddress = http://localhost:7212
 
 GET {{SnowBack_HostAddress}}/weatherforecast/
 Accept: application/json
