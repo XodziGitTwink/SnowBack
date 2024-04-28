@@ -47,7 +47,7 @@ namespace SnowBack.Controllers
         public async Task<IActionResult> Authenticate([Bind("Login,Password")] DAuthentication dAuthentication)
         {
             var user = _context.DAuthentications.SingleOrDefault(x => x.Login == dAuthentication.Login && x.Password == dAuthentication.Password);
-
+            
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 

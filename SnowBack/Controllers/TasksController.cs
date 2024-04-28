@@ -22,30 +22,68 @@ namespace SnowBack.Controllers
         // POST: Task/Create
         [HttpPost]
         [Route("api/task/Create")]
-        public async Task<IActionResult> Create([Bind("Guid,Code,Name,Position,Type,Duration,Created")] DTask dTask)
+        public async Task<IActionResult> Create([Bind("Name,Description,Location,Executor,Priority,PlanTimeToFinish")] MTask mTask)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(dTask);
+                // проверяем наличие в справочнике DTask
+                var task = await _context.DTasks.SingleOrDefaultAsync(x => x.Name == mTask.Name);
+                // если нет, но добавляем, если есть, то подтягивает информацию
+                if(task == null)
+                {
+                    task.Name = mTask.Name;
+
+                    JTask jTask = new JTask();
+                    jTask.Task = task.Id;
+                    jTask.Executor = mTask.Executor.Id;
+                    //jTask.Description = mTask.Description;
+                    jTask.Emergency = mTask.Priority.ToString();
+                    jTask.Dateoff = mTask.PlanTimeToFinish;
+
+                    _context.DTasks.Add(task);
+                    _context.JTasks.Add(jTask);
+                }
+                else
+                {
+                    JTask jTask = new JTask();
+                    jTask.Task = task.Id;
+                    jTask.Executor = mTask.Executor.Id;
+                    //jTask.Description = mTask.Description;
+                    jTask.Emergency = mTask.Priority.ToString();
+                    jTask.Dateoff = mTask.PlanTimeToFinish;
+
+                    _context.JTasks.Add(jTask);
+                }
+                
                 await _context.SaveChangesAsync();
                 return Ok();
             }
             return BadRequest();
         }
 
-        //// GET: Task/Get
-        //[HttpGet]
-        //[Route("api/task/GetList")]
-        //public async Task<IActionResult> GetList(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: Task/Get
+        [HttpGet]
+        [Route("api/task/GetList")]
+        public async Task<List<MTask>> GetList(int? userId)
+        {
+            if (userId == null)
+            {
+                return null;
+            }
 
-        //    List<DTask> tasksList;
+            List<JTask> jList = await _context.JTasks.Where(e => e.Executor == userId || e.Executor == null).ToListAsync();
+            //List<DTask> dList = await _context.DTasks.Where(e => e.Id == executor).ToListAsync();
+            List<MTask> tasksList = new List<MTask>();
 
-        //    return Ok();
-        //}
+            for (int i = 0; i < jList.Count; i++)
+            {
+                //var task = new MTask {Name = dList[i].Name, Executor = jList[i].Executor, Dateon = jList[i].Dateon, Dateoff = jList[i].Dateoff};
+                //tasksList.Add(task);
+            }
+
+            // TODO: возможно надо будет расширить MTask и добавить сортировку по одному из параметров (возможно Сщву)
+
+            return tasksList;
+        }
     }
 }
