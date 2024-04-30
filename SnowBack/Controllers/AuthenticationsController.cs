@@ -19,11 +19,13 @@ namespace SnowBack.Controllers
             _context = context;
         }
 
-        //// GET: Authentications
-        //public async Task<List<DAuthentication>> Index()
-        //{
-        //    return await _context.DAuthentications.ToListAsync();
-        //}
+        // GET: Authentications
+        [HttpGet]
+        [Route("api/index")]
+        public async Task<List<DAuthentication>> Index()
+        {
+            return await _context.DAuthentications.ToListAsync();
+        }
         //public async Task<DAuthentication> Details(int? id)
         //{
         //    if (id == null)
