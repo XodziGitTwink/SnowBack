@@ -35,7 +35,7 @@ namespace SnowBack.Controllers
 
                     JTask jTask = new JTask();
                     jTask.Task = task.Id;
-                    jTask.Executor = mTask.Executor.Id;
+                    jTask.Executor = mTask.Executor;
                     //jTask.Description = mTask.Description;
                     jTask.Emergency = mTask.Priority.ToString();
                     jTask.Dateoff = mTask.PlanTimeToFinish;
@@ -47,7 +47,7 @@ namespace SnowBack.Controllers
                 {
                     JTask jTask = new JTask();
                     jTask.Task = task.Id;
-                    jTask.Executor = mTask.Executor.Id;
+                    jTask.Executor = mTask.Executor;
                     //jTask.Description = mTask.Description;
                     jTask.Emergency = mTask.Priority.ToString();
                     jTask.Dateoff = mTask.PlanTimeToFinish;

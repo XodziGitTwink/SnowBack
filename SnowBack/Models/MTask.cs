@@ -10,7 +10,7 @@
 
         public string Location { get; set; }
 
-        public DStaff Executor { get; set; }
+        public int Executor { get; set; }
 
         public string Priority {  get; set; }
 
