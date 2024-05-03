@@ -66,7 +66,7 @@ namespace SnowBack.Controllers
 
             foreach (var elem in elements)
             {
-                var fields = await _context.DInfraElementsFields.Where(x => x.Type == elem.Type).ToListAsync();
+                var fields = await _context.DInfraElementsFields.Where(x => x.Type == elem.Type && x.ElementId == elem.Id).ToListAsync();
                 elements_with_fields.Add(new DInfraElementWithFields { Element = elem, DInfraElementsFields = fields });
             }
             return elements_with_fields;
@@ -87,65 +87,62 @@ namespace SnowBack.Controllers
         public async Task<List<DInfraElementsField>> GetFields(int id)
         {
             var fields = await _context.DInfraElementsFields.Where(x => x.Type == id).ToListAsync();
-            return fields;
+            return fields.DistinctBy(x => x.Name).ToList();
 
         }
         #endregion
 
         #region Create
-        //[HttpPost]
-        //[Route("infra/create")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,Guid,Name,Code,Inventorycode,Gps,Type,Description")] DInfraElement dInfraElement)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(dInfraElement);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["Type"] = new SelectList(_context.DInfraElementsTypes, "Id", "Id", dInfraElement.Type);
-        //    return View(dInfraElement);
-        //}
 
         [HttpPost]
-        [Route("infra/create/newtype")]
-        public async Task<IActionResult> CreateNewType(DInfraElementWithFields dInfraElement, DInfraElementsType type)
+        [Route("infra/elements/create-newtype")]
+        public async Task<IActionResult> CreateNewType([FromBody] ElementWithFieldsAndType dInfraElement)
         {
             if (ModelState.IsValid)
             {
+                var type = dInfraElement.DInfraElementsType;
                 _context.Add(type);
-                dInfraElement.Element.Type = type.Id;
-                dInfraElement.Element.TypeNavigation = type;
-                _context.Add(dInfraElement.Element);
-                
-                foreach(var field in dInfraElement.DInfraElementsFields)
+                await _context.SaveChangesAsync();
+                var elem = dInfraElement.Element;
+                elem.Type = type.Id;
+                _context.Add(elem);
+                await _context.SaveChangesAsync();
+                foreach (var field in dInfraElement.dInfraElementsFields)
                 {
                     field.Type = type.Id;
-                    field.TypeNavigation = type;
+                    field.Id = null;
+                    field.ElementId = elem.Id;
                     _context.Add(field);
                 }
                 await _context.SaveChangesAsync();
-                return Created();
+                return Ok();
             }
             return NotFound();
         }
-        [HttpPost]
-        [Route("infra/create/")]
-        public async Task<IActionResult> Create(DInfraElementWithFields dInfraElement, DInfraElementsType type)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(dInfraElement.Element);
 
+        [HttpPost]
+        [Route("infra/elements/create/")]
+        public async Task<IActionResult> Create([FromBody] DInfraElementWithFields dInfraElement)
+        {
+            try
+            {
+                var elem = dInfraElement.Element;
+                _context.Add(elem);
+                await _context.SaveChangesAsync();
                 foreach (var field in dInfraElement.DInfraElementsFields)
                 {
+                    field.FieldType = 1;
+                    field.Id = null;
+                    field.ElementId = elem.Id;
                     _context.Add(field);
                 }
                 await _context.SaveChangesAsync();
-                return Created();
+                return Ok();
             }
-            return NotFound();
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
         }
 
         #endregion
@@ -159,7 +156,7 @@ namespace SnowBack.Controllers
             }
 
             var dInfraElement = await _context.DInfraElements
-                .Include(d => d.TypeNavigation)
+                //.Include(d => d.TypeNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dInfraElement == null)
             {
