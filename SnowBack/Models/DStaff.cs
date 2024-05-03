@@ -7,8 +7,6 @@ public partial class DStaff
 {
     public int Id { get; set; }
 
-    public Guid Guid { get; set; }
-
     public string Name { get; set; } = null!;
 
     public string Surename { get; set; } = null!;
@@ -23,5 +21,5 @@ public partial class DStaff
 
     public string? Email { get; set; }
 
-    public virtual ICollection<JTask> JTasks { get; set; } = new List<JTask>();
+    public virtual ICollection<JTask>? JTasks { get; set; } = new List<JTask>();
 }

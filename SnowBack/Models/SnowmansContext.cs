@@ -417,7 +417,6 @@ public partial class SnowmansContext : DbContext
                 .HasMaxLength(512)
                 .IsUnicode(false)
                 .HasColumnName("email");
-            entity.Property(e => e.Guid).HasColumnName("guid");
             entity.Property(e => e.Lastname)
                 .HasMaxLength(512)
                 .IsUnicode(false)

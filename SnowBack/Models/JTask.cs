@@ -11,7 +11,7 @@ public partial class JTask
 
     public int Task { get; set; } // ссылка на задание в справочнике
 
-    // TODO: добавить поле description
+    public string? Description { get; set; }
 
     public int? Element { get; set; } // ссылка на элемент инфраструктуры
 

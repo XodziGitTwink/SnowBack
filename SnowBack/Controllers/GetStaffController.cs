@@ -19,7 +19,6 @@ namespace SnowBack.Controllers
         public async Task<List<DStaff>> GetList()
         {
             List<DStaff> staffList = await _context.DStaffs.ToListAsync();
-
             return staffList;
         }
     }
