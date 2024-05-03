@@ -13,7 +13,7 @@ public partial class DTask
 
     public string Name { get; set; } = null!;
 
-    public int? Position { get; set; }
+    public int? Position { get; set; } // ссылка на специальность пользователя
 
     public bool Type { get; set; }
 

@@ -398,5 +398,7 @@ FodyWeavers.xsd
 *.sln.iml
 SnowBack/Models/SnowmansContext.cs
 SnowBack/Models/SnowmansContext.cs
-SnowBack/Models/SnowmansContext.cs
+SnowBack/SnowBack.http
+SnowBack/Properties/launchSettings.json
+SnowBack/SnowBack.http
 SnowBack/Models/SnowmansContext.cs
