@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SnowBack.Models;
 
@@ -11,9 +12,11 @@ using SnowBack.Models;
 namespace SnowBack.Migrations
 {
     [DbContext(typeof(SnowmansContext))]
-    partial class SnowmansContextModelSnapshot : ModelSnapshot
+    [Migration("20240501092337_element_id")]
+    partial class element_id
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -369,10 +372,6 @@ namespace SnowBack.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("dateon");
 
-                    b.Property<int?>("ElementId")
-                        .HasColumnType("int")
-                        .HasColumnName("element_id");
-
                     b.Property<int?>("FieldType")
                         .HasColumnType("int")
                         .HasColumnName("field_type");
@@ -397,8 +396,6 @@ namespace SnowBack.Migrations
                         .HasColumnName("value");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ElementId");
 
                     b.HasIndex("FieldType");
 
@@ -1076,11 +1073,6 @@ namespace SnowBack.Migrations
 
             modelBuilder.Entity("SnowBack.Models.DInfraElementsField", b =>
                 {
-                    b.HasOne("SnowBack.Models.DInfraElement", "Element")
-                        .WithMany("DInfraElementsFields")
-                        .HasForeignKey("ElementId")
-                        .HasConstraintName("FK_D_Infra_Elements_Fields_D_Infra_Elements");
-
                     b.HasOne("SnowBack.Models.DDfieldsType", "FieldTypeNavigation")
                         .WithMany("DInfraElementsFields")
                         .HasForeignKey("FieldType")
@@ -1090,8 +1082,6 @@ namespace SnowBack.Migrations
                         .WithMany("DInfraElementsFields")
                         .HasForeignKey("Type")
                         .HasConstraintName("FK_D_Infra_Elements_Fields_D_Infra_Elements_Types");
-
-                    b.Navigation("Element");
 
                     b.Navigation("FieldTypeNavigation");
 
@@ -1121,11 +1111,6 @@ namespace SnowBack.Migrations
                 });
 
             modelBuilder.Entity("SnowBack.Models.DDfieldsType", b =>
-                {
-                    b.Navigation("DInfraElementsFields");
-                });
-
-            modelBuilder.Entity("SnowBack.Models.DInfraElement", b =>
                 {
                     b.Navigation("DInfraElementsFields");
                 });
