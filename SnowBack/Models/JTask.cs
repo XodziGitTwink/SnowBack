@@ -17,6 +17,10 @@ public partial class JTask
 
     public int Executor { get; set; } // ссылка на исполнителя
 
+    public bool IsGroup { get; set; }
+
+    public int GroupId { get; set; }
+
     public DateTime Dateon { get; set; }
 
     public DateTime Dateoff { get; set; }

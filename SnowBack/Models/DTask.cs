@@ -15,8 +15,6 @@ public partial class DTask
 
     public int? Position { get; set; } // ссылка на специальность пользователя
 
-    public bool Type { get; set; }
-
     public TimeOnly? Duration { get; set; }
 
     public DateTime Created { get; set; }

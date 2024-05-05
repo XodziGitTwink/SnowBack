@@ -45,6 +45,8 @@ public partial class SnowmansContext : DbContext
 
     public virtual DbSet<DTask> DTasks { get; set; }
 
+    public virtual DbSet<DGroupTask> DGroups { get; set; }
+
     public virtual DbSet<JElementsState> JElementsStates { get; set; }
 
     public virtual DbSet<JEmployeesMove> JEmployeesMoves { get; set; }
@@ -65,7 +67,7 @@ public partial class SnowmansContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-V09KE4L;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-KRSLVHM;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -448,7 +450,6 @@ public partial class SnowmansContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("name");
             entity.Property(e => e.Position).HasColumnName("position");
-            entity.Property(e => e.Type).HasColumnName("type");
         });
 
         modelBuilder.Entity<JElementsState>(entity =>
