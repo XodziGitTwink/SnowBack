@@ -20,6 +20,4 @@ public partial class DStaff
     public string? Phone { get; set; }
 
     public string? Email { get; set; }
-
-    public virtual ICollection<JTask>? JTasks { get; set; } = new List<JTask>();
 }

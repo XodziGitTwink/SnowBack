@@ -110,7 +110,7 @@ namespace SnowBack.Controllers
                 foreach (var field in dInfraElement.dInfraElementsFields)
                 {
                     field.Type = type.Id;
-                    field.Id = null;
+                    //field.Id = null;
                     field.ElementId = elem.Id;
                     _context.Add(field);
                 }
@@ -132,7 +132,7 @@ namespace SnowBack.Controllers
                 foreach (var field in dInfraElement.DInfraElementsFields)
                 {
                     field.FieldType = 1;
-                    field.Id = null;
+                    //field.Id = null;
                     field.ElementId = elem.Id;
                     _context.Add(field);
                 }

@@ -1,6 +1,6 @@
 @SnowBack_HostAddress = http://localhost:7212
 
-GET {{SnowBack_HostAddress}}/weatherforecast/
+GET {{SnowBack_HostAddress}}/api/
 Accept: application/json
 
 ###

@@ -27,6 +27,8 @@ public partial class SnowmansContext : DbContext
 
     public virtual DbSet<DGoodsType> DGoodsTypes { get; set; }
 
+    public virtual DbSet<DGroupTask> DGroupTasks { get; set; }
+
     public virtual DbSet<DInfraElement> DInfraElements { get; set; }
 
     public virtual DbSet<DInfraElementsField> DInfraElementsFields { get; set; }
@@ -240,6 +242,27 @@ public partial class SnowmansContext : DbContext
                 .HasColumnName("type");
         });
 
+        modelBuilder.Entity<DGroupTask>(entity =>
+        {
+            entity.ToTable("D_Group_Task");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(10)
+                .IsFixedLength()
+                .HasColumnName("id");
+            entity.Property(e => e.Code)
+                .HasMaxLength(15)
+                .IsFixedLength()
+                .HasColumnName("code");
+            entity.Property(e => e.Created)
+                .HasColumnType("datetime")
+                .HasColumnName("created");
+            entity.Property(e => e.Name)
+                .HasMaxLength(512)
+                .IsUnicode(false)
+                .HasColumnName("name");
+        });
+
         modelBuilder.Entity<DInfraElement>(entity =>
         {
             entity.ToTable("D_Infra_Elements");
@@ -294,7 +317,6 @@ public partial class SnowmansContext : DbContext
             entity.HasOne(d => d.FieldTypeNavigation).WithMany(p => p.DInfraElementsFields)
                 .HasForeignKey(d => d.FieldType)
                 .HasConstraintName("FK_D_Infra_Elements_Fields_D_DFields_Types");
-
         });
 
         modelBuilder.Entity<DInfraElementsFunction>(entity =>
@@ -571,19 +593,19 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Dateon)
                 .HasColumnType("datetime")
                 .HasColumnName("dateon");
+            entity.Property(e => e.Description)
+                .HasMaxLength(1000)
+                .HasColumnName("description");
             entity.Property(e => e.Element).HasColumnName("element");
             entity.Property(e => e.Emergency)
-                .HasMaxLength(1)
+                .HasMaxLength(10)
                 .HasDefaultValueSql("((0))")
                 .HasColumnName("emergency");
             entity.Property(e => e.Executor).HasColumnName("executor");
+            entity.Property(e => e.GroupId).HasColumnName("groupId");
             entity.Property(e => e.Guid).HasColumnName("guid");
+            entity.Property(e => e.IsGroup).HasColumnName("isGroup");
             entity.Property(e => e.Task).HasColumnName("task");
-
-            entity.HasOne(d => d.ExecutorNavigation).WithMany(p => p.JTasks)
-                .HasForeignKey(d => d.Executor)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_executor");
         });
 
         modelBuilder.Entity<JTransportFueling>(entity =>

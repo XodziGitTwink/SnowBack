@@ -43,7 +43,7 @@ namespace SnowBack.Controllers
         //    return dAuthentication;
         //}
 
-        [HttpPost]
+        [HttpGet]
         [AllowAnonymous]
         [Route("api/authenticate")]
         public async Task<IActionResult> Authenticate([Bind("Login,Password")] DAuthentication dAuthentication)
