@@ -47,8 +47,6 @@ public partial class SnowmansContext : DbContext
 
     public virtual DbSet<DTask> DTasks { get; set; }
 
-    public virtual DbSet<DGroupTask> DGroups { get; set; }
-
     public virtual DbSet<JElementsState> JElementsStates { get; set; }
 
     public virtual DbSet<JEmployeesMove> JEmployeesMoves { get; set; }
@@ -69,7 +67,7 @@ public partial class SnowmansContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-KRSLVHM;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-V09KE4L;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -246,10 +244,7 @@ public partial class SnowmansContext : DbContext
         {
             entity.ToTable("D_Group_Task");
 
-            entity.Property(e => e.Id)
-                .HasMaxLength(10)
-                .IsFixedLength()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Code)
                 .HasMaxLength(15)
                 .IsFixedLength()
@@ -289,6 +284,10 @@ public partial class SnowmansContext : DbContext
                 .HasColumnName("name");
             entity.Property(e => e.Type).HasColumnName("type");
 
+            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElements)
+                .HasForeignKey(d => d.Type)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_D_Infra_Elements_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsField>(entity =>
@@ -314,9 +313,17 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Type).HasColumnName("type");
             entity.Property(e => e.Value).HasColumnName("value");
 
+            entity.HasOne(d => d.Element).WithMany(p => p.DInfraElementsFields)
+                .HasForeignKey(d => d.ElementId)
+                .HasConstraintName("FK_D_Infra_Elements_Fields_D_Infra_Elements");
+
             entity.HasOne(d => d.FieldTypeNavigation).WithMany(p => p.DInfraElementsFields)
                 .HasForeignKey(d => d.FieldType)
                 .HasConstraintName("FK_D_Infra_Elements_Fields_D_DFields_Types");
+
+            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElementsFields)
+                .HasForeignKey(d => d.Type)
+                .HasConstraintName("FK_D_Infra_Elements_Fields_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsFunction>(entity =>
@@ -337,9 +344,14 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(512)
                 .HasColumnName("name");
+            entity.Property(e => e.Objectid).HasColumnName("objectid");
             entity.Property(e => e.Type)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("type");
+
+            entity.HasOne(d => d.Object).WithMany(p => p.DInfraElementsFunctions)
+                .HasForeignKey(d => d.Objectid)
+                .HasConstraintName("FK_D_Infra_Elements_Functions_D_Infra_Elements");
 
             entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElementsFunctions)
                 .HasForeignKey(d => d.Type)
