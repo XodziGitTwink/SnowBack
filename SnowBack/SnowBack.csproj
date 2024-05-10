@@ -17,4 +17,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Deployment">
+      <HintPath>C:\Program Files\IIS\Microsoft Web Deploy\Microsoft.Web.Deployment.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

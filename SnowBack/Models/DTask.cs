@@ -7,15 +7,13 @@ public partial class DTask
 {
     public int Id { get; set; }
 
-    public Guid Guid { get; set; }
+    public Guid? Guid { get; set; }
 
     public string? Code { get; set; }
 
     public string Name { get; set; } = null!;
 
-    public int? Position { get; set; } // ссылка на специальность пользователя
-
-    public bool Type { get; set; }
+    public int? Position { get; set; }
 
     public TimeOnly? Duration { get; set; }
 

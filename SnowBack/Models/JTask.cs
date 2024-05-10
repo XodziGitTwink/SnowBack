@@ -9,23 +9,23 @@ public partial class JTask
 
     public Guid Guid { get; set; }
 
-    public int Task { get; set; } // ссылка на задание в справочнике
+    public int Task { get; set; }
 
-    // TODO: добавить поле description
+    public int? Element { get; set; }
 
-    public int? Element { get; set; } // ссылка на элемент инфраструктуры
-
-    public int Executor { get; set; } // ссылка на исполнителя
+    public int Executor { get; set; }
 
     public DateTime Dateon { get; set; }
 
     public DateTime Dateoff { get; set; }
 
-    public string Emergency { get; set; } = null!; // приоритет
+    public string Emergency { get; set; } = null!;
 
-    public int Creator { get; set; }
+    public int? Creator { get; set; }
 
-    public virtual DStaff ExecutorNavigation { get; set; } = null!;
+    public string? Description { get; set; }
+
+    public bool IsGroup { get; set; }
+
+    public int? GroupId { get; set; }
 }
-
-// 
