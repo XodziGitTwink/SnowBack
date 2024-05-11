@@ -53,7 +53,7 @@ namespace SnowBack.Controllers
                 _context.JTasks.Add(jTask);
 
                 await _context.SaveChangesAsync();
-                return Ok();
+                return Created();
             }
             return BadRequest();
         }
@@ -65,18 +65,12 @@ namespace SnowBack.Controllers
         {
             if (ModelState.IsValid)
             {
-                // проверяем наличие в справочнике DGroup
-                var task = await _context.DGroups.FirstOrDefaultAsync(x => x.Name == mGTask.Name);
-                // если нет, но добавляем, если есть, то подтягивает информацию
-                if (task == null)
-                {
-                    DGroupTask dGTask = new DGroupTask();
-                    dGTask.Name = mGTask.Name;
-                    _context.DGroups.Add(dGTask);
+                DGroupTask dGTask = new DGroupTask();
+                dGTask.Name = mGTask.Name;
+                dGTask.Created = DateTime.Now;
+                _context.DGroupTasks.Add(dGTask);
 
-                    await _context.SaveChangesAsync();
-                    task = await _context.DGroups.FirstOrDefaultAsync(x => x.Name == mGTask.Name);
-                }
+                await _context.SaveChangesAsync();
 
                 foreach (var j in mGTask.Tasks)
                 {
@@ -91,12 +85,11 @@ namespace SnowBack.Controllers
                         _context.DTasks.Add(dTask);
 
                         await _context.SaveChangesAsync();
-                        dtask = await _context.DTasks.FirstOrDefaultAsync(x => x.Name == j.Name);
                     }
 
                     JTask jTask = new JTask();
                     jTask.IsGroup = j.IsGroup;
-                    jTask.GroupId = task.Id;
+                    jTask.GroupId = dGTask.Id;
                     jTask.Task = dtask.Id;
                     jTask.Executor = j.Executor;
                     jTask.Description = j.Description;
@@ -107,7 +100,7 @@ namespace SnowBack.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                return Ok();
+                return Created();
             }
             return BadRequest();
         }
@@ -122,17 +115,29 @@ namespace SnowBack.Controllers
                 return null;
             }
 
-            List<JTask> jList = await _context.JTasks.Where(e => e.Executor == userId && e.IsGroup == false).ToListAsync();
+            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == false).ToListAsync();
             List<MTask> tasksList = new List<MTask>();
 
             for (int i = 0; i < jList.Count; i++)
             {
                 DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
-                var task = new MTask {ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff, };
+                var task = new MTask {ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
                 tasksList.Add(task);
             }
 
-            tasksList = tasksList.OrderBy(x => "Red").ThenBy(x => "Yellow").ThenBy(x => "Green").ToList();
+            tasksList = tasksList.OrderBy(x => x.Executor != userId)
+                          .ThenBy(x =>
+                          {
+                              // Определяем приоритет в зависимости от значения поля Priority
+                              switch (x.Priority)
+                              {
+                                  case "Red": return 1;
+                                  case "Yellow": return 2;
+                                  case "Green": return 3;
+                                  default: return 4; // По умолчанию, если значение Priority не соответствует ожидаемым
+                              }
+                          })
+                          .ToList();
 
             return tasksList;
         }
@@ -147,23 +152,44 @@ namespace SnowBack.Controllers
                 return null;
             }
 
-            List<JTask> jList = await _context.JTasks.Where(e => e.Executor == userId && e.IsGroup == true).ToListAsync();
-            List<MTask> tasksList = new List<MTask>();
-            List<MGroupTask> gTasksList = new List<MGroupTask>();
+            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == true).ToListAsync();
+            List<MTask>? mList = new List<MTask>();
+            List<MGroupTask> gMList = new List<MGroupTask>();
 
             // составляем list заданий
             for (int i = 0; i < jList.Count; i++)
             {
                 DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
-                var task = new MTask { ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff, };
-                tasksList.Add(task);
+                var task = new MTask { ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff, };
+                mList.Add(task);
             }
 
-            // TODO: вернуть кусок кода
+            // сортируем list заданий
+            mList = mList.OrderBy(x => x.Executor != userId)
+                          .ThenBy(x =>
+                          {
+                              // Определяем приоритет в зависимости от значения поля Priority
+                              switch (x.Priority)
+                              {
+                                  case "Red": return 1;
+                                  case "Yellow": return 2;
+                                  case "Green": return 3;
+                                  default: return 4; // По умолчанию, если значение Priority не соответствует ожидаемым
+                              }
+                          })
+                          .ToList();
 
-            tasksList = tasksList.OrderBy(x => "Red").ThenBy(x => "Yellow").ThenBy(x => "Green").ToList();
+            // составляем list групповых заданий
+            var tasks = await _context.DGroupTasks.ToListAsync();
 
-            return gTasksList;
+            // заполняем list групповых заданий
+            for (int i = 0; i < tasks.Count; i++)
+            {
+                var mGTask = new MGroupTask { Name = tasks[i].Name, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = mList.Where(x => x.GroupId == tasks[i].Id).ToList() };
+                gMList.Add(mGTask);
+            }
+
+            return gMList;
         }
     }
 }
