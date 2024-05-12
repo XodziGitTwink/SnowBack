@@ -14,6 +14,4 @@ public partial class DInfraElementsType
     public string? Code { get; set; }
 
     public string? Description { get; set; }
-
-    public virtual ICollection<DInfraElementsFunction> DInfraElementsFunctions { get; set; } = new List<DInfraElementsFunction>();
 }

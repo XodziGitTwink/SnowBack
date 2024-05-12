@@ -284,10 +284,6 @@ public partial class SnowmansContext : DbContext
                 .HasColumnName("name");
             entity.Property(e => e.Type).HasColumnName("type");
 
-            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElements)
-                .HasForeignKey(d => d.Type)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_D_Infra_Elements_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsField>(entity =>
@@ -313,17 +309,10 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Type).HasColumnName("type");
             entity.Property(e => e.Value).HasColumnName("value");
 
-            entity.HasOne(d => d.Element).WithMany(p => p.DInfraElementsFields)
-                .HasForeignKey(d => d.ElementId)
-                .HasConstraintName("FK_D_Infra_Elements_Fields_D_Infra_Elements");
 
             entity.HasOne(d => d.FieldTypeNavigation).WithMany(p => p.DInfraElementsFields)
                 .HasForeignKey(d => d.FieldType)
                 .HasConstraintName("FK_D_Infra_Elements_Fields_D_DFields_Types");
-
-            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElementsFields)
-                .HasForeignKey(d => d.Type)
-                .HasConstraintName("FK_D_Infra_Elements_Fields_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsFunction>(entity =>
@@ -349,28 +338,16 @@ public partial class SnowmansContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnName("type");
 
-            entity.HasOne(d => d.Object).WithMany(p => p.DInfraElementsFunctions)
-                .HasForeignKey(d => d.Objectid)
-                .HasConstraintName("FK_D_Infra_Elements_Functions_D_Infra_Elements");
-
-            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElementsFunctions)
-                .HasForeignKey(d => d.Type)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_D_Infra_Elements_Functions_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsParent>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("D_Infra_Elements_Parents");
+            entity.ToTable("D_Infra_Elements_Parents");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Guid)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("guid");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Objectid).HasColumnName("objectid");
             entity.Property(e => e.Parentid).HasColumnName("parentid");
         });

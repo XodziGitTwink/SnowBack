@@ -5,7 +5,7 @@ namespace SnowBack.Models;
 
 public partial class DInfraElementsField
 {
-    public int? Id { get; set; }
+    public int Id { get; set; }
 
     public Guid Guid { get; set; }
 
@@ -22,5 +22,6 @@ public partial class DInfraElementsField
     public int? FieldType { get; set; }
 
     public int? ElementId { get; set; }
+
     public virtual DDfieldsType? FieldTypeNavigation { get; set; }
 }

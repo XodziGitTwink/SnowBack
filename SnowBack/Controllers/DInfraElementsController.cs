@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
 using SnowBack.Models;
@@ -72,6 +73,31 @@ namespace SnowBack.Controllers
             return elements_with_fields;
             
         }
+        [HttpGet]
+        [Route("infra/elements/getchild/{parent_id}")]
+        public async Task<List<DInfraElementWithFields>> GetChild(int parent_id)
+        {
+            
+            List<DInfraElement> elements = new List<DInfraElement>();
+            List<DInfraElementWithFields> elements_with_fields = new List<DInfraElementWithFields>();
+
+            List<int?> childs_id = await _context.DInfraElementsParents.Where(x => x.Parentid == parent_id).Select(x => x.Objectid).ToListAsync();
+
+            foreach (var id in childs_id)
+            {
+                var elem = await _context.DInfraElements.Where(x => x.Id == id).FirstOrDefaultAsync();
+                if (elem == null) continue;
+                elements.Add(elem);
+            }
+
+            foreach (var elem in elements)
+            {
+                var fields = await _context.DInfraElementsFields.Where(x => x.Type == elem.Type && x.ElementId == elem.Id).ToListAsync();
+                elements_with_fields.Add(new DInfraElementWithFields { Element = elem, DInfraElementsFields = fields });
+            }
+            return elements_with_fields;
+
+        }
 
         [HttpGet]
         [Route("infra/elements/get-types")]
@@ -94,9 +120,10 @@ namespace SnowBack.Controllers
 
         #region Create
 
+
         [HttpPost]
-        [Route("infra/elements/create-newtype")]
-        public async Task<IActionResult> CreateNewType([FromBody] ElementWithFieldsAndType dInfraElement)
+        [Route("infra/elements/create-newtype/")]
+        public async Task<DInfraElement> CreateNewType([FromBody]ElementWithFieldsAndType dInfraElement)
         {
             if (ModelState.IsValid)
             {
@@ -115,23 +142,69 @@ namespace SnowBack.Controllers
                     _context.Add(field);
                 }
                 await _context.SaveChangesAsync();
+                return elem;
+            }
+            return null;
+        }
+        [HttpPut]
+        [Route("infra/elements/addfields/{elemid}/{typeid}")]
+        public async Task<IActionResult> AddFields(List<DInfraElementsField> fields, int elemid, int typeid)
+        {
+            if (ModelState.IsValid)
+            {
+                foreach (var field in fields)
+                {
+                    field.Type = typeid;
+                    //field.Id = null;
+                    field.ElementId = elemid;
+                    _context.Add(field);
+                }
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            return NotFound();
+        }
+        [HttpPost]
+        [Route("infra/elements/create-newtype/{parentid?}")]
+        public async Task<IActionResult> CreateNewType([FromBody] ElementWithFieldsAndType dInfraElement, int? parentid)
+        {
+            if (ModelState.IsValid)
+            {
+                var type = dInfraElement.DInfraElementsType;
+                _context.Add(type);
+                await _context.SaveChangesAsync();
+                var elem = dInfraElement.Element;
+                elem.Type = type.Id;
+                _context.Add(elem);
+                await _context.SaveChangesAsync();
+                if (parentid != null)
+                {
+                    _context.Add(new DInfraElementsParent { Objectid = elem.Id, Parentid = parentid });
+                    await _context.SaveChangesAsync();
+                }
+                await _context.SaveChangesAsync();
                 return Ok();
             }
             return NotFound();
         }
 
         [HttpPost]
-        [Route("infra/elements/create/")]
-        public async Task<IActionResult> Create([FromBody] DInfraElementWithFields dInfraElement)
+        [Route("infra/elements/create/{parentid?}")]
+        public async Task<IActionResult> Create([FromBody] DInfraElementWithFields dInfraElement, int? parentid)
         {
             try
             {
                 var elem = dInfraElement.Element;
                 _context.Add(elem);
                 await _context.SaveChangesAsync();
+                if(parentid != null)
+                {
+                    _context.Add(new DInfraElementsParent { Objectid = elem.Id, Parentid = parentid});
+                    await _context.SaveChangesAsync();
+                }
                 foreach (var field in dInfraElement.DInfraElementsFields)
                 {
-                    field.FieldType = 1;
+                    //field.FieldType = 1;
                     //field.Id = null;
                     field.ElementId = elem.Id;
                     _context.Add(field);
