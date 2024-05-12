@@ -108,14 +108,10 @@ namespace SnowBack.Controllers
         // GET: Task/GetList
         [HttpGet]
         [Route("api/task/GetList")]
-        public async Task<List<MTask>> GetList(int? userId)
+        public async Task<List<MTask>> GetList()
         {
-            if (userId == null)
-            {
-                return null;
-            }
 
-            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == false).ToListAsync();
+            List<JTask> jList = await _context.JTasks.ToListAsync();
             List<MTask> tasksList = new List<MTask>();
 
             for (int i = 0; i < jList.Count; i++)
@@ -125,8 +121,8 @@ namespace SnowBack.Controllers
                 tasksList.Add(task);
             }
 
-            tasksList = tasksList.OrderBy(x => x.Executor != userId)
-                          .ThenBy(x =>
+            tasksList = tasksList
+                          .OrderBy(x =>
                           {
                               // Определяем приоритет в зависимости от значения поля Priority
                               switch (x.Priority)
@@ -145,12 +141,8 @@ namespace SnowBack.Controllers
         // GET: Task/GetGroupList
         [HttpGet]
         [Route("api/task/GetGroupList")]
-        public async Task<List<MGroupTask>> GetGroupList(int? userId)
+        public async Task<List<MGroupTask>> GetGroupList()
         {
-            if (userId == null)
-            {
-                return null;
-            }
 
             List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == true).ToListAsync();
             List<MTask>? mList = new List<MTask>();
@@ -165,8 +157,8 @@ namespace SnowBack.Controllers
             }
 
             // сортируем list заданий
-            mList = mList.OrderBy(x => x.Executor != userId)
-                          .ThenBy(x =>
+            mList = mList
+                          .OrderBy(x =>
                           {
                               // Определяем приоритет в зависимости от значения поля Priority
                               switch (x.Priority)
