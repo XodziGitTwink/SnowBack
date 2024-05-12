@@ -1,4 +1,4 @@
-@SnowBack_HostAddress = http://localhost:7212
+@SnowBack_HostAddress = http://localhost:5148
 
 GET {{SnowBack_HostAddress}}/api/
 Accept: application/json
