@@ -122,8 +122,8 @@ namespace SnowBack.Controllers
 
 
         [HttpPost]
-        [Route("infra/elements/create-newtype")]
-        public async Task<IActionResult> CreateNewType([FromBody] ElementWithFieldsAndType dInfraElement)
+        [Route("infra/elements/create-newtype/{parentid?}")]
+        public async Task<IActionResult> CreateNewType([FromBody] ElementWithFieldsAndType dInfraElement, int? parentid)
         {
             if (ModelState.IsValid)
             {
@@ -134,29 +134,15 @@ namespace SnowBack.Controllers
                 elem.Type = type.Id;
                 _context.Add(elem);
                 await _context.SaveChangesAsync();
+                if (parentid != null)
+                {
+                    _context.Add(new DInfraElementsParent { Objectid = elem.Id, Parentid = parentid });
+                    await _context.SaveChangesAsync();
+                }
                 foreach (var field in dInfraElement.DInfraElementsFields)
                 {
                     field.Type = type.Id;
-                    field.Id = 1;
                     field.ElementId = elem.Id;
-                    _context.Add(field);
-                }
-                await _context.SaveChangesAsync();
-                return Ok();
-            }
-            return NotFound();
-        }
-        [HttpPost]
-        [Route("infra/elements/addfields/")]
-        public async Task<IActionResult> AddFields(DInfraElementWithFields fields)
-        {
-            if (ModelState.IsValid)
-            {
-                foreach (var field in fields.DInfraElementsFields)
-                {
-                   // field.Type = typeid;
-                    //field.Id = null;
-                  //  field.ElementId = elemid;
                     _context.Add(field);
                 }
                 await _context.SaveChangesAsync();
