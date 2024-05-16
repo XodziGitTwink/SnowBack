@@ -130,19 +130,19 @@ namespace SnowBack.Controllers
                 var type = dInfraElement.DInfraElementsType;
                 _context.Add(type);
                 await _context.SaveChangesAsync();
-                var elem = dInfraElement.Element;
-                elem.Type = type.Id;
-                _context.Add(elem);
-                await _context.SaveChangesAsync();
-                if (parentid != null)
-                {
-                    _context.Add(new DInfraElementsParent { Objectid = elem.Id, Parentid = parentid });
-                    await _context.SaveChangesAsync();
-                }
+                //var elem = dInfraElement.Element;
+                //elem.Type = type.Id;
+                //_context.Add(elem);
+                //await _context.SaveChangesAsync();
+                //if (parentid != null)
+                //{
+                //    _context.Add(new DInfraElementsParent { Objectid = elem.Id, Parentid = parentid });
+                //    await _context.SaveChangesAsync();
+                //}
                 foreach (var field in dInfraElement.DInfraElementsFields)
                 {
                     field.Type = type.Id;
-                    field.ElementId = elem.Id;
+                    field.ElementId = dInfraElement.Element.Id;
                     _context.Add(field);
                 }
                 await _context.SaveChangesAsync();
@@ -169,6 +169,7 @@ namespace SnowBack.Controllers
                 {
                     //field.FieldType = 1;
                     //field.Id = null;
+                    field.Type = dInfraElement.Element.Type;
                     field.ElementId = elem.Id;
                     _context.Add(field);
                 }
