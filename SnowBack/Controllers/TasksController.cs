@@ -138,6 +138,102 @@ namespace SnowBack.Controllers
             return tasksList;
         }
 
+        // GET: Task/GetExecutorList
+        [HttpGet]
+        [Route("api/task/GetExecutorList")]
+        public async Task<List<MTask>> GetExecutorList(int userId)
+        {
+
+            List<JTask> jList = await _context.JTasks.Where(e => e.Executor == userId).ToListAsync();
+            List<MTask> tasksExList = new List<MTask>();
+
+            for (int i = 0; i < jList.Count; i++)
+            {
+                DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
+                var task = new MTask { ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
+                tasksExList.Add(task);
+            }
+
+            tasksExList = tasksExList
+                          .OrderBy(x =>
+                          {
+                              switch (x.Priority)
+                              {
+                                  case "Red": return 1;
+                                  case "Yellow": return 2;
+                                  case "Green": return 3;
+                                  default: return 4;
+                              }
+                          })
+                          .ToList();
+
+            return tasksExList;
+        }
+
+        // GET: Task/GetCreatorList
+        [HttpGet]
+        [Route("api/task/GetCreatorList")]
+        public async Task<List<MTask>> GetCreatorList(int userId)
+        {
+
+            List<JTask> jList = await _context.JTasks.Where(e => e.Executor != userId && e.Creator == userId).ToListAsync();
+            List<MTask> tasksCreatorList = new List<MTask>();
+
+            for (int i = 0; i < jList.Count; i++)
+            {
+                DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
+                var task = new MTask { ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
+                tasksCreatorList.Add(task);
+            }
+
+            tasksCreatorList = tasksCreatorList
+                          .OrderBy(x =>
+                          {
+                              switch (x.Priority)
+                              {
+                                  case "Red": return 1;
+                                  case "Yellow": return 2;
+                                  case "Green": return 3;
+                                  default: return 4;
+                              }
+                          })
+                          .ToList();
+
+            return tasksCreatorList;
+        }
+
+        // GET: Task/GetAnotherList
+        [HttpGet]
+        [Route("api/task/GetAnotherList")]
+        public async Task<List<MTask>> GetAnotherList(int userId)
+        {
+
+            List<JTask> jList = await _context.JTasks.Where(e => e.Executor != userId && e.Creator != userId).ToListAsync();
+            List<MTask> tasksAnotherList = new List<MTask>();
+
+            for (int i = 0; i < jList.Count; i++)
+            {
+                DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
+                var task = new MTask { ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
+                tasksAnotherList.Add(task);
+            }
+
+            tasksAnotherList = tasksAnotherList
+                          .OrderBy(x =>
+                          {
+                              switch (x.Priority)
+                              {
+                                  case "Red": return 1;
+                                  case "Yellow": return 2;
+                                  case "Green": return 3;
+                                  default: return 4;
+                              }
+                          })
+                          .ToList();
+
+            return tasksAnotherList;
+        }
+
         // GET: Task/GetGroupList
         [HttpGet]
         [Route("api/task/GetGroupList")]
