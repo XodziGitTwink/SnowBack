@@ -46,6 +46,7 @@ namespace SnowBack.Controllers
                 jTask.IsGroup = mTask.IsGroup;
                 jTask.Task = task.Id;
                 jTask.Executor = mTask.Executor;
+                jTask.Creator = mTask.Creator;
                 jTask.Description = mTask.Description;
                 jTask.Emergency = mTask.Priority.ToString();
                 jTask.Dateon = mTask.Created;
@@ -92,6 +93,7 @@ namespace SnowBack.Controllers
                     jTask.GroupId = dGTask.Id;
                     jTask.Task = dtask.Id;
                     jTask.Executor = j.Executor;
+                    jTask.Creator = j.Creator;
                     jTask.Description = j.Description;
                     jTask.Emergency = j.Priority.ToString();
                     jTask.Dateon = j.Created;
@@ -278,6 +280,98 @@ namespace SnowBack.Controllers
             }
 
             return gMList;
+        }
+
+        // GET: Task/GetCreatorGroupList
+        [HttpGet]
+        [Route("api/task/GetCreatorGroupList")]
+        public async Task<List<MGroupTask>> GetCreatorGroupList(int userId)
+        {
+
+            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == true && e.Creator == userId).ToListAsync();
+            List<MTask>? mList = new List<MTask>();
+            List<MGroupTask> gCreatorMList = new List<MGroupTask>();
+
+            // составляем list заданий
+            for (int i = 0; i < jList.Count; i++)
+            {
+                DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
+                var task = new MTask { ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff, };
+                mList.Add(task);
+            }
+
+            // сортируем list заданий
+            mList = mList
+                          .OrderBy(x =>
+                          {
+                              // Определяем приоритет в зависимости от значения поля Priority
+                              switch (x.Priority)
+                              {
+                                  case "Red": return 1;
+                                  case "Yellow": return 2;
+                                  case "Green": return 3;
+                                  default: return 4; // По умолчанию, если значение Priority не соответствует ожидаемым
+                              }
+                          })
+                          .ToList();
+
+            // составляем list групповых заданий
+            var tasks = await _context.DGroupTasks.ToListAsync();
+
+            // заполняем list групповых заданий
+            for (int i = 0; i < tasks.Count; i++)
+            {
+                var mGTask = new MGroupTask { Name = tasks[i].Name, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = mList.Where(x => x.GroupId == tasks[i].Id).ToList() };
+                gCreatorMList.Add(mGTask);
+            }
+
+            return gCreatorMList;
+        }
+
+        // GET: Task/GetAnotherGroupList
+        [HttpGet]
+        [Route("api/task/GetAnotherGroupList")]
+        public async Task<List<MGroupTask>> GetAnotherGroupList(int userId)
+        {
+
+            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == true && e.Creator != userId).ToListAsync();
+            List<MTask>? mList = new List<MTask>();
+            List<MGroupTask> gAnotherMList = new List<MGroupTask>();
+
+            // составляем list заданий
+            for (int i = 0; i < jList.Count; i++)
+            {
+                DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
+                var task = new MTask { ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff, };
+                mList.Add(task);
+            }
+
+            // сортируем list заданий
+            mList = mList
+                          .OrderBy(x =>
+                          {
+                              // Определяем приоритет в зависимости от значения поля Priority
+                              switch (x.Priority)
+                              {
+                                  case "Red": return 1;
+                                  case "Yellow": return 2;
+                                  case "Green": return 3;
+                                  default: return 4; // По умолчанию, если значение Priority не соответствует ожидаемым
+                              }
+                          })
+                          .ToList();
+
+            // составляем list групповых заданий
+            var tasks = await _context.DGroupTasks.ToListAsync();
+
+            // заполняем list групповых заданий
+            for (int i = 0; i < tasks.Count; i++)
+            {
+                var mGTask = new MGroupTask { Name = tasks[i].Name, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = mList.Where(x => x.GroupId == tasks[i].Id).ToList() };
+                gAnotherMList.Add(mGTask);
+            }
+
+            return gAnotherMList;
         }
     }
 }

@@ -12,6 +12,8 @@
 
         public int Executor { get; set; }
 
+        public int? Creator { get; set; }
+
         public string Priority {  get; set; }
 
         public bool IsGroup {  get; set; }

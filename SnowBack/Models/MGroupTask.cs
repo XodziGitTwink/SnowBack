@@ -8,6 +8,8 @@
 
         public string? Code { get; set; }
 
+        public int? Creator { get; set; }
+
         public DateTime Created { get; set; }
 
         public List<MTask> Tasks { get; set; }
