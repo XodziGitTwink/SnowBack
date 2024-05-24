@@ -11,5 +11,7 @@ public partial class DGroupTask
 
     public string? Code { get; set; }
 
+    public int? Creator { get; set; }
+
     public DateTime Created { get; set; }
 }
