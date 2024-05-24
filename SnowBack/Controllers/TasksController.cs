@@ -69,6 +69,7 @@ namespace SnowBack.Controllers
                 DGroupTask dGTask = new DGroupTask();
                 dGTask.Name = mGTask.Name;
                 dGTask.Created = DateTime.Now;
+                dGTask.Creator = mGTask.Creator;
                 _context.DGroupTasks.Add(dGTask);
 
                 await _context.SaveChangesAsync();
