@@ -16,4 +16,6 @@ public partial class JStaffAssign
     public DateOnly Hired { get; set; }
 
     public DateOnly? Fired { get; set; }
+
+    public virtual DStaff EmployeeNavigation { get; set; } = null!;
 }

@@ -20,4 +20,8 @@ public partial class DStaff
     public string? Phone { get; set; }
 
     public string? Email { get; set; }
+
+    public virtual ICollection<JEmployeesSchedule> JEmployeesSchedules { get; set; } = new List<JEmployeesSchedule>();
+
+    public virtual ICollection<JStaffAssign> JStaffAssigns { get; set; } = new List<JStaffAssign>();
 }

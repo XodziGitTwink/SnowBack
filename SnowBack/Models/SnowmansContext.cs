@@ -67,7 +67,7 @@ public partial class SnowmansContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-KRSLVHM;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-V09KE4L;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -106,10 +106,9 @@ public partial class SnowmansContext : DbContext
 
         modelBuilder.Entity<DEmployeesDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("D_Employees_Details");
+            entity.ToTable("D_Employees_Details");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Birth).HasColumnName("birth");
             entity.Property(e => e.Breast)
                 .HasMaxLength(3)
@@ -142,9 +141,6 @@ public partial class SnowmansContext : DbContext
                 .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("height");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Mname)
                 .HasMaxLength(512)
                 .HasColumnName("mname");
@@ -313,6 +309,7 @@ public partial class SnowmansContext : DbContext
             entity.HasOne(d => d.FieldTypeNavigation).WithMany(p => p.DInfraElementsFields)
                 .HasForeignKey(d => d.FieldType)
                 .HasConstraintName("FK_D_Infra_Elements_Fields_D_DFields_Types");
+
         });
 
         modelBuilder.Entity<DInfraElementsFunction>(entity =>
@@ -337,7 +334,6 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Type)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("type");
-
         });
 
         modelBuilder.Entity<DInfraElementsParent>(entity =>
@@ -500,18 +496,19 @@ public partial class SnowmansContext : DbContext
 
         modelBuilder.Entity<JEmployeesSchedule>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("J_Employees_Schedule");
+            entity.ToTable("J_Employees_Schedule");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Date).HasColumnType("datetime");
             entity.Property(e => e.Guid).HasColumnName("guid");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Shift).HasMaxLength(1);
             entity.Property(e => e.Type).HasMaxLength(6);
             entity.Property(e => e.Variant).HasMaxLength(4);
+
+            entity.HasOne(d => d.EmployeeNavigation).WithMany(p => p.JEmployeesSchedules)
+                .HasForeignKey(d => d.Employee)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_J_Employees_Schedule_D_Staff");
         });
 
         modelBuilder.Entity<JGoodsMoved>(entity =>
@@ -556,18 +553,19 @@ public partial class SnowmansContext : DbContext
 
         modelBuilder.Entity<JStaffAssign>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("J_Staff_Assign");
+            entity.ToTable("J_Staff_Assign");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Employee).HasColumnName("employee");
             entity.Property(e => e.Fired).HasColumnName("fired");
             entity.Property(e => e.Guid).HasColumnName("guid");
             entity.Property(e => e.Hired).HasColumnName("hired");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Position).HasColumnName("position");
+
+            entity.HasOne(d => d.EmployeeNavigation).WithMany(p => p.JStaffAssigns)
+                .HasForeignKey(d => d.Employee)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_J_Staff_Assign_D_Staff");
         });
 
         modelBuilder.Entity<JTask>(entity =>

@@ -142,7 +142,7 @@ namespace SnowBack.Controllers
 
         // GET: Task/GetExecutorList
         [HttpGet]
-        [Route("api/task/GetExecutorList")]
+        [Route("api/task/GetExecutorList/{userId}")]
         public async Task<List<MTask>> GetExecutorList(int userId)
         {
 
@@ -174,7 +174,7 @@ namespace SnowBack.Controllers
 
         // GET: Task/GetCreatorList
         [HttpGet]
-        [Route("api/task/GetCreatorList")]
+        [Route("api/task/GetCreatorList/{userId}")]
         public async Task<List<MTask>> GetCreatorList(int userId)
         {
 
@@ -206,7 +206,7 @@ namespace SnowBack.Controllers
 
         // GET: Task/GetAnotherList
         [HttpGet]
-        [Route("api/task/GetAnotherList")]
+        [Route("api/task/GetAnotherList/{userId}")]
         public async Task<List<MTask>> GetAnotherList(int userId)
         {
 
