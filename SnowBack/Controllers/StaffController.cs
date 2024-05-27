@@ -26,32 +26,43 @@ namespace SnowBack.Controllers
         }
 
         // GET: Staff/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<DStaff?> Details(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return null;
             }
 
             var dStaff = await _context.DStaffs
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dStaff == null)
             {
-                return NotFound();
+                return null;
             }
 
-            return View(dStaff);
+            return dStaff;
         }
 
 
         [HttpPost]
-        [Route("staff/create")]
-        public async Task<IActionResult> Create([FromBody] DStaff dStaff)
+        [Route("staff/create/{position}")]
+        public async Task<IActionResult> Create([FromBody] DStaff dStaff, int position)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(dStaff);
                 await _context.SaveChangesAsync();
+                try
+                {
+                    JStaffAssign jStaffAssign = new JStaffAssign { Employee = dStaff.Id, Position = position, Hired = DateOnly.FromDateTime(DateTime.Now)};
+                    _context.Add(jStaffAssign);
+                    await _context.SaveChangesAsync();
+                }
+                catch
+                {
+
+                    return NotFound();
+                }
                 return Created();
             }
             return NotFound();
