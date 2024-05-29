@@ -36,6 +36,22 @@ namespace SnowBack.Controllers
             return await _context.DInfraElements.ToListAsync();
         }
 
+        // GET: DInfraElements
+        [HttpGet]
+        [Route("infra/elementsModels/index")]
+        public async Task<List<DInfraElementModel>> ModelsList()
+        {
+            // var snowmansContext = _context.DInfraElements.Include(d => d.TypeNavigation);
+            var elements = await _context.DInfraElements.ToListAsync();
+            List<DInfraElementModel> res = new List<DInfraElementModel>();
+            foreach (var element in elements)
+            {
+                res.Add(new DInfraElementModel { Id = element.Id, Guid = element.Guid, Code = element.Code, Description = element.Description, Name = element.Name, Gps = element.Gps, Inventorycode = element.Inventorycode, Type = element.Type });
+            }
+
+            return res;
+        }
+
         // GET: DInfraElements/Details/5
         [HttpGet]
         [Route("infra/elements/index/{id}")]
