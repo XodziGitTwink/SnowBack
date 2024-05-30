@@ -30,7 +30,7 @@ namespace SnowBack.Controllers
 
         // GET: /getIdByPhone
         [HttpGet]
-        [Route("api/getIdByPhone")]
+        [Route("api/getIdByPhone/{phone}")]
         public async Task<int> GetIdByPhone(string phone)
         {
             var user = await _context.DStaffs.FirstOrDefaultAsync(x => x.Phone == phone);
