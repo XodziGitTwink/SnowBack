@@ -20,9 +20,15 @@ namespace SnowBack.Controllers
 
         [HttpGet]
         [Route("staff/get")]
-        public async Task<List<DStaff>> Details()
+        public async Task<List<DStaff>> Get()
         {
             return await _context.DStaffs.ToListAsync();
+        }
+        [HttpGet]
+        [Route("staff/shift-get")]
+        public async Task<List<Shift>> GetShift()
+        {
+            return await _context.Shifts.ToListAsync();
         }
 
         // GET: Staff/Details/5

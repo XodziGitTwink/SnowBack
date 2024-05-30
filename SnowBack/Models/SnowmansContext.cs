@@ -65,6 +65,10 @@ public partial class SnowmansContext : DbContext
 
     public virtual DbSet<JTransportRent> JTransportRents { get; set; }
 
+    public virtual DbSet<Shift> Shifts { get; set; }
+
+    public virtual DbSet<StaffPosition> StaffPositions { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=DESKTOP-V09KE4L;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;");
@@ -248,6 +252,7 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Created)
                 .HasColumnType("datetime")
                 .HasColumnName("created");
+            entity.Property(e => e.Creator).HasColumnName("creator");
             entity.Property(e => e.Name)
                 .HasMaxLength(512)
                 .IsUnicode(false)
@@ -334,6 +339,7 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Type)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("type");
+
         });
 
         modelBuilder.Entity<DInfraElementsParent>(entity =>
@@ -501,7 +507,6 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Date).HasColumnType("datetime");
             entity.Property(e => e.Guid).HasColumnName("guid");
-            entity.Property(e => e.Shift).HasMaxLength(1);
             entity.Property(e => e.Type).HasMaxLength(6);
             entity.Property(e => e.Variant).HasMaxLength(4);
 
@@ -509,6 +514,10 @@ public partial class SnowmansContext : DbContext
                 .HasForeignKey(d => d.Employee)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_J_Employees_Schedule_D_Staff");
+
+            entity.HasOne(d => d.ShiftNavigation).WithMany(p => p.JEmployeesSchedules)
+                .HasForeignKey(d => d.Shift)
+                .HasConstraintName("FK_J_Employees_Schedule_Shift");
         });
 
         modelBuilder.Entity<JGoodsMoved>(entity =>
@@ -637,6 +646,32 @@ public partial class SnowmansContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("started");
             entity.Property(e => e.Task).HasColumnName("task");
+        });
+
+        modelBuilder.Entity<Shift>(entity =>
+        {
+            entity.ToTable("Shift");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Duration).HasColumnName("duration");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .HasColumnName("name");
+        });
+
+        modelBuilder.Entity<StaffPosition>(entity =>
+        {
+            entity.ToTable("Staff_Position");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Description)
+                .HasMaxLength(100)
+                .HasColumnName("description");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .HasColumnName("name");
         });
 
         OnModelCreatingPartial(modelBuilder);

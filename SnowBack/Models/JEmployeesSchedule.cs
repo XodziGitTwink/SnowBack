@@ -15,11 +15,13 @@ public partial class JEmployeesSchedule
 
     public int Manager { get; set; }
 
-    public string? Shift { get; set; }
+    public int? Shift { get; set; }
 
     public string? Variant { get; set; }
 
     public string Type { get; set; } = null!;
 
     public virtual DStaff EmployeeNavigation { get; set; } = null!;
+
+    public virtual Shift? ShiftNavigation { get; set; }
 }
