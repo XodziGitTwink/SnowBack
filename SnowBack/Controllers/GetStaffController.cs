@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SnowBack.Models;
 
@@ -25,6 +26,19 @@ namespace SnowBack.Controllers
                 res.Add(new DStaffModel { Code = staff.Code, Id = staff.Id, CallId = staff.CallId, Email = staff.Email, Lastname = staff.Lastname, Name = staff.Name, Phone = staff.Phone, Surename = staff.Surename });
             }
             return res;
+        }
+
+        // GET: /getIdByPhone
+        [HttpGet]
+        [Route("api/getIdByPhone")]
+        public async Task<int> GetIdByPhone(string phone)
+        {
+            var user = await _context.DStaffs.FirstOrDefaultAsync(x => x.Phone == phone);
+            if(user == null)
+            {
+                return 0;
+            }
+            return user.Id;
         }
     }
 }
