@@ -285,11 +285,11 @@ namespace SnowBack.Controllers
 
         // GET: Task/GetCreatorGroupList
         [HttpGet]
-        [Route("api/task/GetCreatorGroupList")]
+        [Route("api/task/GetCreatorGroupList/{userId}")]
         public async Task<List<MGroupTask>> GetCreatorGroupList(int userId)
         {
 
-            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == true && e.Creator == userId).ToListAsync();
+            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == true).ToListAsync();
             List<MTask>? mList = new List<MTask>();
             List<MGroupTask> gCreatorMList = new List<MGroupTask>();
 
@@ -317,7 +317,7 @@ namespace SnowBack.Controllers
                           .ToList();
 
             // составляем list групповых заданий
-            var tasks = await _context.DGroupTasks.ToListAsync();
+            var tasks = await _context.DGroupTasks.Where(x => x.Creator == userId).ToListAsync();
 
             // заполняем list групповых заданий
             for (int i = 0; i < tasks.Count; i++)
@@ -331,11 +331,11 @@ namespace SnowBack.Controllers
 
         // GET: Task/GetAnotherGroupList
         [HttpGet]
-        [Route("api/task/GetAnotherGroupList")]
+        [Route("api/task/GetAnotherGroupList/{userId}")]
         public async Task<List<MGroupTask>> GetAnotherGroupList(int userId)
         {
 
-            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == true && e.Creator != userId).ToListAsync();
+            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == true).ToListAsync();
             List<MTask>? mList = new List<MTask>();
             List<MGroupTask> gAnotherMList = new List<MGroupTask>();
 
@@ -363,7 +363,7 @@ namespace SnowBack.Controllers
                           .ToList();
 
             // составляем list групповых заданий
-            var tasks = await _context.DGroupTasks.ToListAsync();
+            var tasks = await _context.DGroupTasks.Where(x => x.Creator != userId).ToListAsync();
 
             // заполняем list групповых заданий
             for (int i = 0; i < tasks.Count; i++)
