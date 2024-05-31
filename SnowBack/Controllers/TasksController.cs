@@ -68,6 +68,7 @@ namespace SnowBack.Controllers
             {
                 DGroupTask dGTask = new DGroupTask();
                 dGTask.Name = mGTask.Name;
+                dGTask.Description = mGTask.Description;
                 dGTask.Created = DateTime.Now;
                 dGTask.Creator = mGTask.Creator;
                 _context.DGroupTasks.Add(dGTask);
@@ -276,7 +277,7 @@ namespace SnowBack.Controllers
             // заполняем list групповых заданий
             for (int i = 0; i < tasks.Count; i++)
             {
-                var mGTask = new MGroupTask { Name = tasks[i].Name, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = mList.Where(x => x.GroupId == tasks[i].Id).ToList() };
+                var mGTask = new MGroupTask { Name = tasks[i].Name,Description = tasks[i].Description, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = mList.Where(x => x.GroupId == tasks[i].Id).ToList() };
                 gMList.Add(mGTask);
             }
 
@@ -322,7 +323,7 @@ namespace SnowBack.Controllers
             // заполняем list групповых заданий
             for (int i = 0; i < tasks.Count; i++)
             {
-                var mGTask = new MGroupTask { Name = tasks[i].Name, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = mList.Where(x => x.GroupId == tasks[i].Id).ToList() };
+                var mGTask = new MGroupTask { Name = tasks[i].Name, Description = tasks[i].Description, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = mList.Where(x => x.GroupId == tasks[i].Id).ToList() };
                 gCreatorMList.Add(mGTask);
             }
 
@@ -368,7 +369,7 @@ namespace SnowBack.Controllers
             // заполняем list групповых заданий
             for (int i = 0; i < tasks.Count; i++)
             {
-                var mGTask = new MGroupTask { Name = tasks[i].Name, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = mList.Where(x => x.GroupId == tasks[i].Id).ToList() };
+                var mGTask = new MGroupTask { Name = tasks[i].Name, Description = tasks[i].Description, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = mList.Where(x => x.GroupId == tasks[i].Id).ToList() };
                 gAnotherMList.Add(mGTask);
             }
 
