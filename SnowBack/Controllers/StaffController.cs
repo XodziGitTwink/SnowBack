@@ -24,11 +24,24 @@ namespace SnowBack.Controllers
         {
             return await _context.DStaffs.ToListAsync();
         }
+
         [HttpGet]
         [Route("staff/shift-get")]
         public async Task<List<Shift>> GetShift()
         {
             return await _context.Shifts.ToListAsync();
+        }
+
+        [HttpPost]
+        [Route("staff/get-by-schedule")]
+        public async Task<List<DStaff>> GetBySchedule([FromBody] List<int> ids)
+        {
+            List<DStaff> staff = new List<DStaff>();
+            foreach(var id in ids)
+            {
+                staff.Add(await _context.DStaffs.Where(x => x.Id == id).FirstAsync());
+            }
+            return staff;
         }
 
         // GET: Staff/Details/5

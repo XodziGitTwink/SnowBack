@@ -26,6 +26,7 @@ namespace SnowBack.Controllers
             //var snowmansContext = _context.JEmployeesSchedules.Include(j => j.EmployeeNavigation).Include(j => j.ShiftNavigation);
             return await _context.JEmployeesSchedules.ToListAsync();
         }
+
         [HttpGet]
         [Route("schedule/get-by-date/{dateTime}")]
         public async Task<List<JEmployeesSchedule>> GetbyDate(string dateTime)
@@ -77,7 +78,7 @@ namespace SnowBack.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Guid,Date,Employee,Manager,Shift,Variant,Type")] JEmployeesSchedule jEmployeesSchedule)
+        public async Task<IActionResult> Edit(int id, [FromBody] JEmployeesSchedule jEmployeesSchedule)
         {
             if (id != jEmployeesSchedule.Id)
             {
