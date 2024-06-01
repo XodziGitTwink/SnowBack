@@ -21,6 +21,8 @@ public partial class JEmployeesSchedule
 
     public string Type { get; set; } = null!;
 
+    public int? Deviation { get; set; }
+
     public virtual DStaff EmployeeNavigation { get; set; } = null!;
 
     public virtual Shift? ShiftNavigation { get; set; }

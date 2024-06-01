@@ -253,6 +253,9 @@ public partial class SnowmansContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("created");
             entity.Property(e => e.Creator).HasColumnName("creator");
+            entity.Property(e => e.Description)
+                .HasMaxLength(512)
+                .HasColumnName("description");
             entity.Property(e => e.Name)
                 .HasMaxLength(512)
                 .IsUnicode(false)
@@ -314,7 +317,6 @@ public partial class SnowmansContext : DbContext
             entity.HasOne(d => d.FieldTypeNavigation).WithMany(p => p.DInfraElementsFields)
                 .HasForeignKey(d => d.FieldType)
                 .HasConstraintName("FK_D_Infra_Elements_Fields_D_DFields_Types");
-
         });
 
         modelBuilder.Entity<DInfraElementsFunction>(entity =>
@@ -652,9 +654,7 @@ public partial class SnowmansContext : DbContext
         {
             entity.ToTable("Shift");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Duration).HasColumnName("duration");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
