@@ -75,6 +75,8 @@ namespace SnowBack.Controllers
 
                 await _context.SaveChangesAsync();
 
+                dGTask = await _context.DGroupTasks.FirstOrDefaultAsync(x => x.Name == mGTask.Name);
+
                 foreach (var j in mGTask.Tasks)
                 {
                     // проверяем наличие в справочнике DTask
