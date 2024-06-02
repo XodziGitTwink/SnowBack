@@ -22,6 +22,10 @@
 
         public int? GroupId { get; set; }
 
+        public bool? IsActive { get; set; } = false;
+
+        public bool? IsComplete { get; set; } = false;
+
         public DateTime Created { get; set; }
 
         public DateTime PlanTimeToFinish { get; set; }

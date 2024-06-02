@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using SnowBack.Models;
 using static System.Net.Mime.MediaTypeNames;
@@ -150,13 +151,13 @@ namespace SnowBack.Controllers
         public async Task<List<MTask>> GetExecutorList(int userId)
         {
 
-            List<JTask> jList = await _context.JTasks.Where(e => e.Executor == userId).ToListAsync();
+            List<JTask> jList = await _context.JTasks.Where(e => e.Executor == userId && e.IsComplete == false).ToListAsync();
             List<MTask> tasksExList = new List<MTask>();
 
             for (int i = 0; i < jList.Count; i++)
             {
                 DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
-                var task = new MTask { ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
+                var task = new MTask { IsActive = jList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
                 tasksExList.Add(task);
             }
 
@@ -182,13 +183,13 @@ namespace SnowBack.Controllers
         public async Task<List<MTask>> GetCreatorList(int userId)
         {
 
-            List<JTask> jList = await _context.JTasks.Where(e => e.Executor != userId && e.Creator == userId).ToListAsync();
+            List<JTask> jList = await _context.JTasks.Where(e => e.Executor != userId && e.Creator == userId && e.IsComplete == false).ToListAsync();
             List<MTask> tasksCreatorList = new List<MTask>();
 
             for (int i = 0; i < jList.Count; i++)
             {
                 DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
-                var task = new MTask { ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
+                var task = new MTask { IsActive = jList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
                 tasksCreatorList.Add(task);
             }
 
@@ -214,13 +215,13 @@ namespace SnowBack.Controllers
         public async Task<List<MTask>> GetAnotherList(int userId)
         {
 
-            List<JTask> jList = await _context.JTasks.Where(e => e.Executor != userId && e.Creator != userId).ToListAsync();
+            List<JTask> jList = await _context.JTasks.Where(e => e.Executor != userId && e.Creator != userId && e.IsComplete == false).ToListAsync();
             List<MTask> tasksAnotherList = new List<MTask>();
 
             for (int i = 0; i < jList.Count; i++)
             {
                 DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
-                var task = new MTask { ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
+                var task = new MTask { IsActive = jList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
                 tasksAnotherList.Add(task);
             }
 
@@ -292,7 +293,7 @@ namespace SnowBack.Controllers
         public async Task<List<MGroupTask>> GetCreatorGroupList(int userId)
         {
 
-            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == true).ToListAsync();
+            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == true && e.IsComplete == false).ToListAsync();
             List<MTask>? mList = new List<MTask>();
             List<MGroupTask> gCreatorMList = new List<MGroupTask>();
 
@@ -300,7 +301,7 @@ namespace SnowBack.Controllers
             for (int i = 0; i < jList.Count; i++)
             {
                 DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
-                var task = new MTask { ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff, };
+                var task = new MTask { IsActive = jList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff, };
                 mList.Add(task);
             }
 
@@ -325,7 +326,10 @@ namespace SnowBack.Controllers
             // заполняем list групповых заданий
             for (int i = 0; i < tasks.Count; i++)
             {
-                var mGTask = new MGroupTask { Name = tasks[i].Name, Description = tasks[i].Description, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = mList.Where(x => x.GroupId == tasks[i].Id).ToList() };
+                var childsList = mList.Where(x => x.GroupId == tasks[i].Id).ToList();
+                if (childsList == null) continue;
+
+                var mGTask = new MGroupTask { Name = tasks[i].Name, Description = tasks[i].Description, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = childsList };
                 gCreatorMList.Add(mGTask);
             }
 
@@ -338,7 +342,7 @@ namespace SnowBack.Controllers
         public async Task<List<MGroupTask>> GetAnotherGroupList(int userId)
         {
 
-            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == true).ToListAsync();
+            List<JTask> jList = await _context.JTasks.Where(e => e.IsGroup == true && e.IsComplete == false).ToListAsync();
             List<MTask>? mList = new List<MTask>();
             List<MGroupTask> gAnotherMList = new List<MGroupTask>();
 
@@ -346,7 +350,7 @@ namespace SnowBack.Controllers
             for (int i = 0; i < jList.Count; i++)
             {
                 DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
-                var task = new MTask { ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff, };
+                var task = new MTask { IsActive = jList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff, };
                 mList.Add(task);
             }
 
@@ -371,11 +375,62 @@ namespace SnowBack.Controllers
             // заполняем list групповых заданий
             for (int i = 0; i < tasks.Count; i++)
             {
-                var mGTask = new MGroupTask { Name = tasks[i].Name, Description = tasks[i].Description, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = mList.Where(x => x.GroupId == tasks[i].Id).ToList() };
+                var childsList = mList.Where(x => x.GroupId == tasks[i].Id).ToList();
+                if (childsList == null) continue;
+
+                var mGTask = new MGroupTask { Name = tasks[i].Name, Description = tasks[i].Description, Code = tasks[i].Code, Created = tasks[i].Created, Tasks = childsList };
                 gAnotherMList.Add(mGTask);
             }
 
             return gAnotherMList;
+        }
+
+        // GET: Task/checkExecutorActive
+        [HttpGet]
+        [Route("api/task/checkExecutorActive/{userId}")]
+        public async Task<IActionResult> CheckExecutorActive(int userId)
+        {
+            var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Executor == userId && x.IsComplete == false && x.IsActive);
+            
+            if(jTask == null)
+            { 
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        // PUT: Task/changeActive
+        [HttpGet]
+        [Route("api/task/changeActive/{taskId}")]
+        public async Task<IActionResult> ChangeActive(int taskId, bool active)
+        {
+            var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Id == taskId && x.IsComplete == false && x.IsActive == false);
+
+            if (jTask == null)
+            {
+                return BadRequest();
+            }
+
+            jTask.IsActive = active;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        // PUT: Task/changeComplete
+        [HttpGet]
+        [Route("api/task/changeComplete/{taskId}")]
+        public async Task<IActionResult> ChangeComplete(int taskId, bool complete)
+        {
+            var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Id == taskId && x.IsComplete == false && x.IsActive);
+
+            if (jTask == null)
+            {
+                return BadRequest();
+            }
+
+            jTask.IsComplete = complete;
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }
