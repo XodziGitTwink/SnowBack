@@ -390,7 +390,7 @@ namespace SnowBack.Controllers
         [Route("api/task/checkExecutorActive/{userId}")]
         public async Task<IActionResult> CheckExecutorActive(int userId)
         {
-            var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Executor == userId && x.IsComplete == false && x.IsActive);
+            var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Executor == userId && x.IsComplete == false && x.IsActive == true);
             
             if(jTask == null)
             { 
@@ -421,7 +421,7 @@ namespace SnowBack.Controllers
         [Route("api/task/changeComplete/{taskId}")]
         public async Task<IActionResult> ChangeComplete(int taskId, bool complete)
         {
-            var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Id == taskId && x.IsComplete == false && x.IsActive);
+            var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Id == taskId && x.IsComplete == false && x.IsActive == true);
 
             if (jTask == null)
             {
