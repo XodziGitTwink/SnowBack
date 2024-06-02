@@ -150,7 +150,7 @@ namespace SnowBack.Controllers
         [Route("api/task/GetExecutorList/{userId}")]
         public async Task<List<MTask>> GetExecutorList(int userId)
         {
-
+            // тут выводятся все задания, в которых пользователь - исполнитель (и обычные, и дочерние у комплексных)
             List<JTask> jList = await _context.JTasks.Where(e => e.Executor == userId && e.IsComplete == false).ToListAsync();
             List<MTask> tasksExList = new List<MTask>();
 
@@ -182,8 +182,8 @@ namespace SnowBack.Controllers
         [Route("api/task/GetCreatorList/{userId}")]
         public async Task<List<MTask>> GetCreatorList(int userId)
         {
-
-            List<JTask> jList = await _context.JTasks.Where(e => e.Executor != userId && e.Creator == userId && e.IsComplete == false).ToListAsync();
+            // тут выводятся задания, в которых пользователь - создатель, исполнитель - другой человек (только обычные)
+            List<JTask> jList = await _context.JTasks.Where(e => e.Executor != userId && e.Creator == userId && e.IsComplete == false && e.IsGroup == false).ToListAsync();
             List<MTask> tasksCreatorList = new List<MTask>();
 
             for (int i = 0; i < jList.Count; i++)
@@ -214,8 +214,8 @@ namespace SnowBack.Controllers
         [Route("api/task/GetAnotherList/{userId}")]
         public async Task<List<MTask>> GetAnotherList(int userId)
         {
-
-            List<JTask> jList = await _context.JTasks.Where(e => e.Executor != userId && e.Creator != userId && e.IsComplete == false).ToListAsync();
+            // тут выводятся задания, в которых пользователь не является создателем или исполнителем (только обычные)
+            List<JTask> jList = await _context.JTasks.Where(e => e.Executor != userId && e.Creator != userId && e.IsComplete == false && e.IsGroup == false).ToListAsync();
             List<MTask> tasksAnotherList = new List<MTask>();
 
             for (int i = 0; i < jList.Count; i++)
