@@ -2,6 +2,8 @@
 {
     public class MTask
     {
+        public int Id { get; set; } = 1;
+
         public int ParentId { get; set; }
 
         public string Name { get; set; } = null!;
