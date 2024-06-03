@@ -400,7 +400,7 @@ namespace SnowBack.Controllers
         }
 
         // PUT: Task/changeActive
-        [HttpGet]
+        [HttpPut]
         [Route("api/task/changeActive/{taskId}")]
         public async Task<IActionResult> ChangeActive(int taskId, bool active)
         {
@@ -417,7 +417,7 @@ namespace SnowBack.Controllers
         }
 
         // PUT: Task/changeComplete
-        [HttpGet]
+        [HttpPut]
         [Route("api/task/changeComplete/{taskId}")]
         public async Task<IActionResult> ChangeComplete(int taskId, bool complete)
         {
