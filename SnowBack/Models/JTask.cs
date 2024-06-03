@@ -13,7 +13,7 @@ public partial class JTask
 
     public int? Element { get; set; }
 
-    public int Executor { get; set; }
+    public int? Executor { get; set; }
 
     public DateTime Dateon { get; set; }
 

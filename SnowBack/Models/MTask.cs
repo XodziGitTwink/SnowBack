@@ -1,8 +1,8 @@
-﻿namespace SnowBack.Models
+﻿ namespace SnowBack.Models
 {
     public class MTask
     {
-        public int Id { get; set; } = 1;
+        public int Id { get; set; }
 
         public int ParentId { get; set; }
 
@@ -12,7 +12,7 @@
 
         public string? Location { get; set; }
 
-        public int Executor { get; set; }
+        public int? Executor { get; set; }
 
         public int? Creator { get; set; }
 
