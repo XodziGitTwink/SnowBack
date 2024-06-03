@@ -30,8 +30,9 @@ namespace SnowBack.Controllers
         {
             if (ModelState.IsValid)
             {
+                var task = await _context.DTasks.FirstOrDefaultAsync(x => x.Name == mTask.Name);
                 // если нет, но добавляем, если есть, то подтягивает информацию
-                if (await _context.DTasks.AnyAsync(x => x.Name == mTask.Name))
+                if (task == null)
                 {
                     DTask dTask = new DTask();
                     dTask.Name = mTask.Name;
@@ -39,8 +40,8 @@ namespace SnowBack.Controllers
                     _context.DTasks.Add(dTask);
 
                     await _context.SaveChangesAsync();
+                    task = await _context.DTasks.FirstOrDefaultAsync(x => x.Name == mTask.Name);
                 }
-                var task = await _context.DTasks.FirstOrDefaultAsync(x => x.Name == mTask.Name);
 
                 JTask jTask = new JTask();
                 jTask.IsGroup = mTask.IsGroup;
@@ -79,8 +80,9 @@ namespace SnowBack.Controllers
 
                 foreach (var j in mGTask.Tasks)
                 {
+                    var dtask = await _context.DTasks.FirstOrDefaultAsync(x => x.Name == j.Name);
                     // если нет, но добавляем, если есть, то подтягивает информацию
-                    if (await _context.DTasks.AnyAsync(x => x.Name == j.Name))
+                    if (dtask == null)
                     {
                         DTask dTask = new DTask();
                         dTask.Name = j.Name;
@@ -88,8 +90,8 @@ namespace SnowBack.Controllers
                         _context.DTasks.Add(dTask);
 
                         await _context.SaveChangesAsync();
+                        dtask = await _context.DTasks.FirstOrDefaultAsync(x => x.Name == j.Name);
                     }
-                    var dtask = await _context.DTasks.FirstOrDefaultAsync(x => x.Name == j.Name);
 
                     JTask jTask = new JTask();
                     jTask.IsGroup = j.IsGroup;
