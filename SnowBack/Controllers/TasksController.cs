@@ -24,7 +24,7 @@ namespace SnowBack.Controllers
 
         // POST: Task/Create
         [HttpPost]
-        [Route("api/task/Create")]
+        [Route("task/Create")]
         //public async Task<IActionResult> Create([Bind("ParentId,Name,Description,Location,Executor,Priority,IsGroup,Created,PlanTimeToFinish")] MTask mTask)
         public async Task<IActionResult> Create([FromBody] MTask mTask)
         {
@@ -62,7 +62,7 @@ namespace SnowBack.Controllers
 
         // POST: Task/CreateGroup
         [HttpPost]
-        [Route("api/task/CreateGroup")]
+        [Route("task/CreateGroup")]
         public async Task<IActionResult> CreateGroup([FromBody] MGroupTask mGTask)
         {
             if (ModelState.IsValid)
@@ -114,7 +114,7 @@ namespace SnowBack.Controllers
 
         //// GET: Task/GetList
         //[HttpGet]
-        //[Route("api/task/GetList")]
+        //[Route("task/GetList")]
         //public async Task<List<MTask>> GetList()
         //{
 
@@ -147,7 +147,7 @@ namespace SnowBack.Controllers
 
         // GET: Task/GetExecutorList
         [HttpGet]
-        [Route("api/task/GetExecutorList/{userId}")]
+        [Route("task/GetExecutorList/{userId}")]
         public async Task<List<MTask>> GetExecutorList(int userId)
         {
             // тут выводятся все задания, в которых пользователь - исполнитель (и обычные, и дочерние у комплексных)
@@ -179,7 +179,7 @@ namespace SnowBack.Controllers
 
         //// GET: Task/GetCreatorList
         //[HttpGet]
-        //[Route("api/task/GetCreatorList/{userId}")]
+        //[Route("task/GetCreatorList/{userId}")]
         //public async Task<List<MTask>> GetCreatorList(int userId)
         //{
         //    // тут выводятся задания, в которых пользователь - создатель, исполнитель - другой человек (только обычные)
@@ -211,7 +211,7 @@ namespace SnowBack.Controllers
 
         // GET: Task/GetAnotherList
         [HttpGet]
-        [Route("api/task/GetAnotherList/{userId}")]
+        [Route("task/GetAnotherList/{userId}")]
         public async Task<List<MTask>> GetAnotherList(int userId)
         {
             // тут выводятся задания, в которых пользователь не является создателем или исполнителем (только обычные)
@@ -243,7 +243,7 @@ namespace SnowBack.Controllers
 
         // GET: Task/GetGroupList
         [HttpGet]
-        [Route("api/task/GetGroupList")]
+        [Route("task/GetGroupList")]
         public async Task<List<MGroupTask>> GetGroupList()
         {
 
@@ -292,7 +292,7 @@ namespace SnowBack.Controllers
 
         //// GET: Task/GetCreatorGroupList
         //[HttpGet]
-        //[Route("api/task/GetCreatorGroupList/{userId}")]
+        //[Route("task/GetCreatorGroupList/{userId}")]
         //public async Task<List<MGroupTask>> GetCreatorGroupList(int userId)
         //{
 
@@ -341,7 +341,7 @@ namespace SnowBack.Controllers
 
         //// GET: Task/GetAnotherGroupList
         //[HttpGet]
-        //[Route("api/task/GetAnotherGroupList/{userId}")]
+        //[Route("task/GetAnotherGroupList/{userId}")]
         //public async Task<List<MGroupTask>> GetAnotherGroupList(int userId)
         //{
 
@@ -390,7 +390,7 @@ namespace SnowBack.Controllers
 
         // GET: Task/getChilds
         [HttpGet]
-        [Route("api/task/getChilds/{groupId}")]
+        [Route("task/getChilds/{groupId}")]
         public async Task<List<MTask>> GetChilds(int groupId)
         {
             var childsList = await _context.JTasks.Where(x => x.GroupId == groupId && x.IsComplete == false).ToListAsync();
@@ -420,7 +420,7 @@ namespace SnowBack.Controllers
 
         // GET: Task/getActiveTaskByUserId
         [HttpGet]
-        [Route("api/task/getActiveTaskByUserId/{userId}")]
+        [Route("task/getActiveTaskByUserId/{userId}")]
         public async Task<MTask> GetActiveTaskByUserId(int userId)
         {
             var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Executor == userId && x.IsComplete == false && x.IsActive == true);
@@ -437,7 +437,7 @@ namespace SnowBack.Controllers
 
         // GET: Task/checkExecutorActive
         [HttpGet]
-        [Route("api/task/checkExecutorActive/{userId}")]
+        [Route("task/checkExecutorActive/{userId}")]
         public async Task<IActionResult> CheckExecutorActive(int userId)
         {
             var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Executor == userId && x.IsComplete == false && x.IsActive == true);
@@ -451,7 +451,7 @@ namespace SnowBack.Controllers
 
         // PUT: Task/changeActive
         [HttpPut]
-        [Route("api/task/changeActive/{taskId}")]
+        [Route("task/changeActive/{taskId}")]
         public async Task<IActionResult> ChangeActive(int taskId, bool active)
         {
             var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Id == taskId && x.IsComplete == false && x.IsActive == false);
@@ -468,7 +468,7 @@ namespace SnowBack.Controllers
 
         // PUT: Task/changeExecutor
         [HttpPut]
-        [Route("api/task/changeExecutor/{taskId}/{newExId}")]
+        [Route("task/changeExecutor/{taskId}/{newExId}")]
         public async Task<IActionResult> ChangeExecutor(int taskId, int newExId)
         {
             var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Id == taskId && x.IsComplete == false);
@@ -485,7 +485,7 @@ namespace SnowBack.Controllers
 
         // PUT: Task/changeComplete
         [HttpPut]
-        [Route("api/task/changeComplete/{taskId}")]
+        [Route("task/changeComplete/{taskId}")]
         public async Task<IActionResult> ChangeComplete(int taskId, bool complete)
         {
             var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Id == taskId && x.IsComplete == false && x.IsActive == true);
