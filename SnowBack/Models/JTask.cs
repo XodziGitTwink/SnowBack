@@ -29,7 +29,7 @@ public partial class JTask
 
     public int? GroupId { get; set; }
 
-    public bool? IsActive { get; set; } = false;
+    public bool? IsActive { get; set; }
 
-    public bool? IsComplete { get; set; } = false;
+    public bool? IsComplete { get; set; }
 }

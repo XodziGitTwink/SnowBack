@@ -21,6 +21,8 @@ public partial class DStaff
 
     public string? Email { get; set; }
 
+    public int? Position { get; set; }
+
     public virtual ICollection<JEmployeesSchedule> JEmployeesSchedules { get; set; } = new List<JEmployeesSchedule>();
 
     public virtual ICollection<JStaffAssign> JStaffAssigns { get; set; } = new List<JStaffAssign>();
