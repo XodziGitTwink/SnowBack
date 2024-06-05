@@ -112,6 +112,17 @@ namespace SnowBack.Controllers
             return BadRequest();
         }
 
+        // GET: Task/getDTasksList
+        [HttpGet]
+        [Route("task/getDTasksList")]
+        public async Task<List<DTask>> GetDTasksList()
+        {
+            List<DTask> tasksList = new List<DTask>();
+            tasksList = await _context.DTasks.ToListAsync();
+
+            return tasksList;
+        }
+
         //// GET: Task/GetList
         //[HttpGet]
         //[Route("task/GetList")]
