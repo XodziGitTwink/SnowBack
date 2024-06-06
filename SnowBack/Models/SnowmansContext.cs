@@ -71,7 +71,7 @@ public partial class SnowmansContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-KRSLVHM;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-V09KE4L;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -86,6 +86,7 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Password)
                 .HasMaxLength(50)
                 .HasColumnName("password");
+            entity.Property(e => e.StaffId).HasColumnName("staff_id");
         });
 
         modelBuilder.Entity<DDfieldsType>(entity =>
@@ -317,6 +318,7 @@ public partial class SnowmansContext : DbContext
             entity.HasOne(d => d.FieldTypeNavigation).WithMany(p => p.DInfraElementsFields)
                 .HasForeignKey(d => d.FieldType)
                 .HasConstraintName("FK_D_Infra_Elements_Fields_D_DFields_Types");
+
         });
 
         modelBuilder.Entity<DInfraElementsFunction>(entity =>
@@ -341,7 +343,6 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Type)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("type");
-
         });
 
         modelBuilder.Entity<DInfraElementsParent>(entity =>
@@ -440,6 +441,7 @@ public partial class SnowmansContext : DbContext
                 .HasMaxLength(15)
                 .IsFixedLength()
                 .HasColumnName("phone");
+            entity.Property(e => e.Position).HasColumnName("position");
             entity.Property(e => e.Surename)
                 .HasMaxLength(512)
                 .IsUnicode(false)
@@ -602,6 +604,8 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Executor).HasColumnName("executor");
             entity.Property(e => e.GroupId).HasColumnName("groupId");
             entity.Property(e => e.Guid).HasColumnName("guid");
+            entity.Property(e => e.IsActive).HasColumnName("isActive");
+            entity.Property(e => e.IsComplete).HasColumnName("isComplete");
             entity.Property(e => e.IsGroup).HasColumnName("isGroup");
             entity.Property(e => e.Task).HasColumnName("task");
         });

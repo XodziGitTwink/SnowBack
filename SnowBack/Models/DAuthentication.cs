@@ -10,4 +10,6 @@ public partial class DAuthentication
     public string Login { get; set; } = null!;
 
     public string Password { get; set; } = null!;
+
+    public int? StaffId { get; set; }
 }
