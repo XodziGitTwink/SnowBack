@@ -52,6 +52,8 @@ namespace SnowBack.Controllers
                 jTask.Emergency = mTask.Priority.ToString();
                 jTask.Dateon = mTask.Created;
                 jTask.Dateoff = mTask.PlanTimeToFinish;
+                jTask.IsActive = false;
+                jTask.IsComplete = false;
                 _context.JTasks.Add(jTask);
 
                 await _context.SaveChangesAsync();
@@ -103,6 +105,8 @@ namespace SnowBack.Controllers
                     jTask.Emergency = j.Priority.ToString();
                     jTask.Dateon = j.Created;
                     jTask.Dateoff = j.PlanTimeToFinish;
+                    jTask.IsActive = false;
+                    jTask.IsComplete = false;
                     _context.JTasks.Add(jTask);
                 }
 
