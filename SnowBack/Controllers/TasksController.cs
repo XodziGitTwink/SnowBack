@@ -464,10 +464,10 @@ namespace SnowBack.Controllers
             return BadRequest();
         }
 
-        // PUT: Task/changeActive
-        [HttpPut]
+        // GET: Task/changeActive
+        [HttpGet]
         [Route("task/changeActive/{taskId}")]
-        public async Task<IActionResult> ChangeActive(int taskId, bool active)
+        public async Task<IActionResult> ChangeActive(int taskId)
         {
             var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Id == taskId && x.IsComplete == false && x.IsActive == false);
 
@@ -481,8 +481,8 @@ namespace SnowBack.Controllers
             return Ok();
         }
 
-        // PUT: Task/changeExecutor
-        [HttpPut]
+        // GET: Task/changeExecutor
+        [HttpGet]
         [Route("task/changeExecutor/{taskId}/{newExId}")]
         public async Task<IActionResult> ChangeExecutor(int taskId, int newExId)
         {
@@ -498,10 +498,10 @@ namespace SnowBack.Controllers
             return Ok();
         }
 
-        // PUT: Task/changeComplete
-        [HttpPut]
+        // GET: Task/changeComplete
+        [HttpGet]
         [Route("task/changeComplete/{taskId}")]
-        public async Task<IActionResult> ChangeComplete(int taskId, bool complete)
+        public async Task<IActionResult> ChangeComplete(int taskId)
         {
             var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Id == taskId && x.IsComplete == false && x.IsActive == true);
 
