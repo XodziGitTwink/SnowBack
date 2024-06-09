@@ -10,6 +10,8 @@
 
         public string? Description { get; set; }
 
+        public string? Comment { get; set; }
+
         public string? Location { get; set; }
 
         public int? Executor { get; set; }

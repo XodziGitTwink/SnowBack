@@ -500,8 +500,8 @@ namespace SnowBack.Controllers
 
         // GET: Task/changeComplete
         [HttpGet]
-        [Route("task/changeComplete/{taskId}")]
-        public async Task<IActionResult> ChangeComplete(int taskId)
+        [Route("task/changeComplete/{taskId}/{comment?}")]
+        public async Task<IActionResult> ChangeComplete(int taskId, string? comment)
         {
             var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Id == taskId && x.IsComplete == false && x.IsActive == true);
 
@@ -510,6 +510,7 @@ namespace SnowBack.Controllers
                 return BadRequest();
             }
 
+            jTask.Comment = comment;
             jTask.IsActive = false;
             jTask.IsComplete = true;
             await _context.SaveChangesAsync();
