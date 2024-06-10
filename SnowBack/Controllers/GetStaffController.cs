@@ -28,17 +28,17 @@ namespace SnowBack.Controllers
             return res;
         }
 
-        // GET: /getIdByPhone
+        // GET: /getRoleByPhone
         [HttpGet]
-        [Route("getIdByPhone/{phone}")]
-        public async Task<int> GetIdByPhone(string phone)
+        [Route("getRoleByPhone/{id}")]
+        public async Task<int?> GetRoleByPhone(int id)
         {
-            var user = await _context.DStaffs.FirstOrDefaultAsync(x => x.Phone == phone);
-            if(user == null)
+            var user = await _context.DStaffs.FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
             {
                 return 0;
             }
-            return user.Id;
+            return user.Position;
         }
     }
 }
