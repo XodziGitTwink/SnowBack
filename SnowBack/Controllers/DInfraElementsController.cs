@@ -132,6 +132,21 @@ namespace SnowBack.Controllers
             return fields.DistinctBy(x => x.Name).ToList();
 
         }
+
+        [HttpGet]
+        [Route("infra/elements/get-functions/")]
+        public async Task<List<DInfraElementsFunction>> GetFunctions()
+        {
+            return await _context.DInfraElementsFunctions.ToListAsync();
+
+        }
+        [HttpGet]
+        [Route("infra/elements/get-functions-by-id/{id}")]
+        public async Task<List<DInfraElementsFunction>> GetFunctionsById(int id)
+        {
+            return await _context.DInfraElementsFunctions.Where(x => x.Objectid == id).ToListAsync();
+
+        }
         #endregion
 
         #region Create
