@@ -40,5 +40,18 @@ namespace SnowBack.Controllers
             }
             return user.Id;
         }
+
+        // GET: /getRoleByPhone
+        [HttpGet]
+        [Route("getRoleByPhone/{phone}")]
+        public async Task<int?> GetRoleByPhone(string phone)
+        {
+            var user = await _context.DStaffs.FirstOrDefaultAsync(x => x.Phone == phone);
+            if (user == null)
+            {
+                return 0;
+            }
+            return user.Position;
+        }
     }
 }
