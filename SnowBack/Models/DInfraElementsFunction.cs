@@ -18,4 +18,5 @@ public partial class DInfraElementsFunction
     public string? Description { get; set; }
 
     public int? Objectid { get; set; }
+
 }

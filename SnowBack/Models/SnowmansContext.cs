@@ -288,7 +288,6 @@ public partial class SnowmansContext : DbContext
                 .HasMaxLength(512)
                 .HasColumnName("name");
             entity.Property(e => e.Type).HasColumnName("type");
-
         });
 
         modelBuilder.Entity<DInfraElementsField>(entity =>
@@ -314,20 +313,16 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Type).HasColumnName("type");
             entity.Property(e => e.Value).HasColumnName("value");
 
-
             entity.HasOne(d => d.FieldTypeNavigation).WithMany(p => p.DInfraElementsFields)
                 .HasForeignKey(d => d.FieldType)
                 .HasConstraintName("FK_D_Infra_Elements_Fields_D_DFields_Types");
-
         });
 
         modelBuilder.Entity<DInfraElementsFunction>(entity =>
         {
             entity.ToTable("D_Infra_Elements_Functions");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Code)
                 .HasMaxLength(15)
                 .IsUnicode(false)
@@ -340,9 +335,7 @@ public partial class SnowmansContext : DbContext
                 .HasMaxLength(512)
                 .HasColumnName("name");
             entity.Property(e => e.Objectid).HasColumnName("objectid");
-            entity.Property(e => e.Type)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("type");
+            entity.Property(e => e.Type).HasColumnName("type");
         });
 
         modelBuilder.Entity<DInfraElementsParent>(entity =>

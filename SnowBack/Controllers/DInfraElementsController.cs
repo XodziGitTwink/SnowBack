@@ -147,6 +147,13 @@ namespace SnowBack.Controllers
             return await _context.DInfraElementsFunctions.Where(x => x.Objectid == id).ToListAsync();
 
         }
+        [HttpGet]
+        [Route("infra/elements/get-functions-by-type/{id}")]
+        public async Task<List<DInfraElementsFunction>> GetFunctionsByType(int id)
+        {
+            return await _context.DInfraElementsFunctions.Where(x => x.Type == id).ToListAsync();
+
+        }
         #endregion
 
         #region Create
@@ -205,7 +212,7 @@ namespace SnowBack.Controllers
                     _context.Add(field);
                 }
                 await _context.SaveChangesAsync();
-                return Ok();
+                return Ok(elem);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -213,6 +220,21 @@ namespace SnowBack.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("infra/elements/create-function/")]
+        public async Task<IActionResult> CreateFunction([FromBody] DInfraElementsFunction dInfraElementsFunction)
+        {
+            try
+            {
+                _context.Add(dInfraElementsFunction);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+        }
         #endregion
 
         #region Delete
