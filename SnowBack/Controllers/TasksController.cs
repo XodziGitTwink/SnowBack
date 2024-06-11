@@ -230,7 +230,7 @@ namespace SnowBack.Controllers
         public async Task<List<MTask>> GetAnotherList(int userId)
         {
             // тут выводятся задания, в которых пользователь не является создателем или исполнителем (только обычные)
-            List<JTask> jList = await _context.JTasks.Where(e => e.Executor == null && e.IsComplete == false && e.IsGroup == false).ToListAsync();
+            List<JTask> jList = await _context.JTasks.Where(e => e.Executor == null && e.IsComplete == false).ToListAsync();
             List<MTask> tasksAnotherList = new List<MTask>();
 
             for (int i = 0; i < jList.Count; i++)
