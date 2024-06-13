@@ -154,6 +154,18 @@ namespace SnowBack.Controllers
             return await _context.DInfraElementsFunctions.Where(x => x.Type == id).ToListAsync();
 
         }
+        [HttpGet]
+        [Route("getInfraDocs/{infraId}")]
+        public async Task<List<string>> GetInfraDocs(int infraId)
+        {
+            var infraDocsList = new List<string>();
+            var docsList = await _context.DInfraElementsKbs.Where(x => x.Relatedobject == infraId).ToListAsync();
+            foreach (var link in docsList)
+            {
+                infraDocsList.Add(link.Filepath);
+            }
+            return infraDocsList;
+        }
         #endregion
 
         #region Create

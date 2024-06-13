@@ -433,6 +433,20 @@ namespace SnowBack.Controllers
             return list;
         }
 
+        // GET: Task/getTaskDocs
+        [HttpGet]
+        [Route("task/GetTaskDocs/{taskId}")]
+        public async Task<List<string>> GetTaskDocs(int taskId)
+        {
+            var tasksDocsList = new List<string>();
+            var docsList = await _context.DTasksKbs.Where(x => x.Relatedobject == taskId).ToListAsync();
+            foreach (var link in docsList)
+            {
+                tasksDocsList.Add(link.Filepath);
+            }
+            return tasksDocsList;
+        }
+
         // GET: Task/getActiveTaskByUserId
         [HttpGet]
         [Route("task/getActiveTaskByUserId/{userId}")]

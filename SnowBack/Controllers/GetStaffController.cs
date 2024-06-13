@@ -40,5 +40,19 @@ namespace SnowBack.Controllers
             }
             return user.Position;
         }
+
+        // GET: /getExecutorDocs
+        [HttpGet]
+        [Route("getExecutorDocs/{executorId}")]
+        public async Task<List<string>> GetExecutorDocs(int executorId)
+        {
+            var executorDocsList = new List<string>();
+            var docsList = await _context.DStaffKbs.Where(x => x.Relatedobject == executorId).ToListAsync();
+            foreach (var link in docsList)
+            {
+                executorDocsList.Add(link.Filepath);
+            }
+            return executorDocsList;
+        }
     }
 }
