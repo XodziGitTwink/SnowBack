@@ -56,35 +56,44 @@ namespace SnowBack.Controllers
             return NotFound();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Guid,Task,Started,Finished,Element,Point,Executor,Description")] JTransportRent jTransportRent)
+        [HttpPut]
+        [Route("transport/release")]
+        public async Task<IActionResult> ToRelease([FromBody] DInfraElementsField field)
         {
-            if (id != jTransportRent.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                if(field.Name == "Rent")
                 {
-                    _context.Update(jTransportRent);
+                    field.Value = "0";
                     await _context.SaveChangesAsync();
+                    return Ok();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!JTransportRentExists(jTransportRent.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return BadRequest("Error field name");
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(jTransportRent);
+            return BadRequest("Error not valid");
+        }
+
+        [HttpPut]
+        [Route("transport/rent")]
+        public async Task<IActionResult> ToRent([FromBody] DInfraElementsField field)
+        {
+            if (ModelState.IsValid)
+            {
+                if (field.Name == "Rent")
+                {
+                    field.Value = "1";
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Error field name");
+                }
+            }
+            return BadRequest("Error not valid");
         }
 
         // GET: Transport/Delete/5

@@ -7,7 +7,7 @@ public partial class DTasksKb
 {
     public int Id { get; set; }
 
-    public Guid Guid { get; set; }
+    public Guid? Guid { get; set; }
 
     public int Relatedobject { get; set; }
 
