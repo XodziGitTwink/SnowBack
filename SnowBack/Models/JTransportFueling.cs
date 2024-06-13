@@ -11,13 +11,13 @@ public partial class JTransportFueling
 
     public int? Task { get; set; }
 
-    public DateTime Started { get; set; }
+    public DateTime? Started { get; set; }
 
     public int Vehicle { get; set; }
 
-    public int Point { get; set; }
+    public int? Point { get; set; }
 
-    public int Userwho { get; set; }
+    public int? Userwho { get; set; }
 
     public int Good { get; set; }
 
