@@ -64,6 +64,47 @@ namespace SnowBack.Controllers
             return BadRequest();
         }
 
+        // POST: Task/UpdateTask
+        [HttpPost]
+        [Route("task/Update")]
+        //public async Task<IActionResult> Create([Bind("ParentId,Name,Description,Location,Executor,Priority,IsGroup,Created,PlanTimeToFinish")] MTask mTask)
+        public async Task<IActionResult> UpdateTask([FromBody] MTask mTask)
+        {
+            if (ModelState.IsValid)
+            {
+                var task = await _context.DTasks.FirstOrDefaultAsync(x => x.Name == mTask.Name);
+                // если нет, но добавляем, если есть, то подтягивает информацию
+                if (task == null)
+                {
+                    DTask dTask = new DTask();
+                    dTask.Name = mTask.Name;
+                    dTask.Created = mTask.Created;
+                    _context.DTasks.Add(dTask);
+
+                    await _context.SaveChangesAsync();
+                    task = await _context.DTasks.FirstOrDefaultAsync(x => x.Name == mTask.Name);
+                }
+
+                var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Id == mTask.Id);
+
+                if (jTask == null)
+                {
+                    return BadRequest(); 
+                }
+
+                jTask.Task = task.Id;
+                jTask.Executor = mTask.Executor;
+                jTask.Element = Convert.ToInt32(mTask.Location);
+                jTask.Description = mTask.Description;
+                jTask.Emergency = mTask.Priority.ToString();
+                jTask.Dateoff = mTask.PlanTimeToFinish;
+
+                await _context.SaveChangesAsync();
+                return Created();
+            }
+            return BadRequest();
+        }
+
         // POST: Task/CreateGroup
         [HttpPost]
         [Route("task/CreateGroup")]
@@ -175,7 +216,7 @@ namespace SnowBack.Controllers
             for (int i = 0; i < jList.Count; i++)
             {
                 DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
-                var task = new MTask { Id = jList[i].Id, IsActive = jList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Location = jList[i].Element.ToString(), Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
+                var task = new MTask { Id = jList[i].Id, IsActive = jList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Creator = jList[i].Creator, Location = jList[i].Element.ToString(), Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
                 tasksExList.Add(task);
             }
 
@@ -239,7 +280,7 @@ namespace SnowBack.Controllers
             for (int i = 0; i < jList.Count; i++)
             {
                 DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
-                var task = new MTask { Id = jList[i].Id, IsActive = jList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Location = jList[i].Element.ToString(), Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
+                var task = new MTask { Id = jList[i].Id, IsActive = jList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Creator = jList[i].Creator, Location = jList[i].Element.ToString(), Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff };
                 tasksAnotherList.Add(task);
             }
 
@@ -273,7 +314,7 @@ namespace SnowBack.Controllers
             for (int i = 0; i < jList.Count; i++)
             {
                 DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jList[i].Task);
-                var task = new MTask { Id = jList[i].Id, IsActive = jList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Location = jList[i].Element.ToString(), Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff, };
+                var task = new MTask { Id = jList[i].Id, IsActive = jList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Creator = jList[i].Creator, Location = jList[i].Element.ToString(), Description = jList[i].Description, Executor = jList[i].Executor, IsGroup = jList[i].IsGroup, GroupId = jList[i].GroupId, Priority = jList[i].Emergency, Created = jList[i].Dateon, PlanTimeToFinish = jList[i].Dateoff, };
                 mList.Add(task);
             }
 
@@ -417,7 +458,7 @@ namespace SnowBack.Controllers
             for (int i = 0; i < childsList.Count; i++)
             {
                 DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == childsList[i].Task);
-                var task = new MTask { Id = childsList[i].Id, IsActive = childsList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Location = childsList[i].Element.ToString(), Description = childsList[i].Description, Executor = childsList[i].Executor, IsGroup = childsList[i].IsGroup, GroupId = childsList[i].GroupId, Priority = childsList[i].Emergency, Created = childsList[i].Dateon, PlanTimeToFinish = childsList[i].Dateoff };
+                var task = new MTask { Id = childsList[i].Id, IsActive = childsList[i].IsActive, ParentId = dTask.Id, Name = dTask.Name, Location = childsList[i].Element.ToString(), Description = childsList[i].Description, Creator = childsList[i].Creator, Executor = childsList[i].Executor, IsGroup = childsList[i].IsGroup, GroupId = childsList[i].GroupId, Priority = childsList[i].Emergency, Created = childsList[i].Dateon, PlanTimeToFinish = childsList[i].Dateoff };
                 list.Add(task);
             }
 
