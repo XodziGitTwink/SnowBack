@@ -56,7 +56,7 @@ namespace SnowBack.Controllers
             return NotFound();
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("transport/release")]
         public async Task<IActionResult> ToRelease([FromBody] DInfraElementsField field)
         {
@@ -65,6 +65,7 @@ namespace SnowBack.Controllers
                 if(field.Name == "Rent")
                 {
                     field.Value = "0";
+                    _context.Update(field);
                     await _context.SaveChangesAsync();
                     return Ok();
                 }
@@ -76,22 +77,35 @@ namespace SnowBack.Controllers
             return BadRequest("Error not valid");
         }
 
-        [HttpPut]
-        [Route("transport/rent")]
-        public async Task<IActionResult> ToRent([FromBody] DInfraElementsField field)
+        [HttpPost]
+        [Route("transport/rent/{id}")]
+        public async Task<IActionResult> ToRent([FromBody] List<DInfraElementsField> fields, int id)
         {
             if (ModelState.IsValid)
             {
-                if (field.Name == "Rent")
+                foreach (var field in fields)
                 {
-                    field.Value = "1";
-                    await _context.SaveChangesAsync();
-                    return Ok();
+                    if (field.Name == "Rent")
+                    {
+                        field.Value = "1";
+                        _context.Update(field);
+                        await _context.SaveChangesAsync();
+                        continue;
+                        
+                    }
+                    if(field.Name == "UserId")
+                    {
+                        field.Value=id.ToString();
+                        _context.Update(field);
+                        await _context.SaveChangesAsync();
+                        continue;
+                    }
+                    else
+                    {
+                        return BadRequest("Error field name");
+                    }
                 }
-                else
-                {
-                    return BadRequest("Error field name");
-                }
+                return Ok();
             }
             return BadRequest("Error not valid");
         }
