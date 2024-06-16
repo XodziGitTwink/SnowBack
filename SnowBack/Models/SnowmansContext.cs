@@ -581,7 +581,7 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Relatedobject).HasColumnName("relatedobject");
         });
 
-        modelBuilder.Entity<DTmc>(entity =>
+        modelBuilder.Entity<DTMC>(entity =>
         {
             entity.ToTable("D_TMC");
 
@@ -606,7 +606,7 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.UserId).HasColumnName("userId");
         });
 
-        modelBuilder.Entity<DTmcFunction>(entity =>
+        modelBuilder.Entity<DTMCFunction>(entity =>
         {
             entity.ToTable("D_TMC_Functions");
 
@@ -623,7 +623,7 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.TypeId).HasColumnName("typeId");
         });
 
-        modelBuilder.Entity<DTmcType>(entity =>
+        modelBuilder.Entity<DTMCType>(entity =>
         {
             entity.ToTable("D_TMC_Types");
 
