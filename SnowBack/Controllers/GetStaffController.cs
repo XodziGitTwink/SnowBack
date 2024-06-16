@@ -5,7 +5,7 @@ using SnowBack.Models;
 
 namespace SnowBack.Controllers
 {
-    public class GetStaffController
+    public class GetStaffController : Controller
     {
         private readonly SnowmansContext _context;
 
