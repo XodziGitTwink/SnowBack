@@ -25,8 +25,6 @@ public partial class JTask
 
     public string? Description { get; set; }
 
-    public string? Comment { get; set; }
-
     public bool IsGroup { get; set; }
 
     public int? GroupId { get; set; }
@@ -34,4 +32,6 @@ public partial class JTask
     public bool? IsActive { get; set; }
 
     public bool? IsComplete { get; set; }
+
+    public string? Comment { get; set; }
 }

@@ -57,52 +57,73 @@ namespace SnowBack.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Guid,Task,Started,Finished,Element,Point,Executor,Description")] JTransportRent jTransportRent)
+        [Route("transport/release")]
+        public async Task<IActionResult> ToRelease([FromBody] DInfraElementsField field)
         {
-            if (id != jTransportRent.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                if(field.Name == "Rent")
                 {
-                    _context.Update(jTransportRent);
+                    field.Value = "0";
+                    _context.Update(field);
                     await _context.SaveChangesAsync();
+                    return Ok();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!JTransportRentExists(jTransportRent.Id))
+                    return BadRequest("Error field name");
+                }
+            }
+            return BadRequest("Error not valid");
+        }
+
+        [HttpPost]
+        [Route("transport/rent/{id}")]
+        public async Task<IActionResult> ToRent([FromBody] List<DInfraElementsField> fields, int id)
+        {
+            if (ModelState.IsValid)
+            {
+                foreach (var field in fields)
+                {
+                    if (field.Name == "Rent")
                     {
-                        return NotFound();
+                        field.Value = "1";
+                        _context.Update(field);
+                        await _context.SaveChangesAsync();
+                        continue;
+                        
+                    }
+                    if(field.Name == "UserId")
+                    {
+                        field.Value=id.ToString();
+                        _context.Update(field);
+                        await _context.SaveChangesAsync();
+                        continue;
                     }
                     else
                     {
-                        throw;
+                        return BadRequest("Error field name");
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Ok();
             }
-            return View(jTransportRent);
+            return BadRequest("Error not valid");
         }
 
-        // GET: Transport/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpPost]
+        [Route("transport/create-function/")]
+        public async Task<IActionResult> CreateFunction([FromBody] DInfraElementsFunction dInfraElementsFunction)
         {
-            if (id == null)
+            try
+            {
+                _context.Add(dInfraElementsFunction);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (DbUpdateConcurrencyException)
             {
                 return NotFound();
             }
-
-            var jTransportRent = await _context.JTransportRents
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (jTransportRent == null)
-            {
-                return NotFound();
-            }
-
-            return View(jTransportRent);
         }
 
 

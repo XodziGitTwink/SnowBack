@@ -9,17 +9,13 @@ public partial class JTransportFueling
 
     public Guid Guid { get; set; }
 
-    public int? Task { get; set; }
-
-    public DateTime? Started { get; set; }
-
     public int Vehicle { get; set; }
-
-    public int? Point { get; set; }
 
     public int? Userwho { get; set; }
 
-    public int Good { get; set; }
+    public string? Fueltype { get; set; }
 
-    public string? Description { get; set; }
+    public double? Fuelamount { get; set; }
+
+    public int? Gasstation { get; set; }
 }
