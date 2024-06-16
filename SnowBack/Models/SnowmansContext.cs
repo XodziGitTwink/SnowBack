@@ -61,11 +61,11 @@ public partial class SnowmansContext : DbContext
 
     public virtual DbSet<DTasksKb> DTasksKbs { get; set; }
 
-    public virtual DbSet<DTmc> DTmcs { get; set; }
+    public virtual DbSet<DTMC> DTmcs { get; set; }
 
-    public virtual DbSet<DTmcFunction> DTmcFunctions { get; set; }
+    public virtual DbSet<DTMCFunction> DTmcFunctions { get; set; }
 
-    public virtual DbSet<DTmcType> DTmcTypes { get; set; }
+    public virtual DbSet<DTMCType> DTmcTypes { get; set; }
 
     public virtual DbSet<JElementsState> JElementsStates { get; set; }
 
