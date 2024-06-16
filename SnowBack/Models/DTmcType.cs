@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SnowBack.Models;
-
-public partial class DTmcType
+namespace SnowBack.Models
 {
-    public int Id { get; set; }
+    public class DTMCType
+    {
+        public int Id { get; set; }
 
-    public Guid? Guid { get; set; }
-
-    public string? Name { get; set; }
-
-    public string? Description { get; set; }
-
-    public string? Code { get; set; }
+        public Guid? Guid { get; set; }
+        
+        public string? Name { get; set; }
+        
+        public string? Description { get; set; }
+        
+        public string? Code { get; set; }
+    }
 }
