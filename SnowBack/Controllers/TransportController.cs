@@ -110,22 +110,20 @@ namespace SnowBack.Controllers
             return BadRequest("Error not valid");
         }
 
-        // GET: Transport/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpPost]
+        [Route("transport/create-function/")]
+        public async Task<IActionResult> CreateFunction([FromBody] DInfraElementsFunction dInfraElementsFunction)
         {
-            if (id == null)
+            try
+            {
+                _context.Add(dInfraElementsFunction);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (DbUpdateConcurrencyException)
             {
                 return NotFound();
             }
-
-            var jTransportRent = await _context.JTransportRents
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (jTransportRent == null)
-            {
-                return NotFound();
-            }
-
-            return View(jTransportRent);
         }
 
 
