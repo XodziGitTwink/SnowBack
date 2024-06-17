@@ -20,22 +20,75 @@ namespace SnowBack.Controllers
         [Route("getTMCList")]
         public async Task<List<DTMCModel>> GetTMCList()
         {
-            //List<DTMC> TMCList = await _context.______.Where(x => x.IsReserved == false && x.IsUsed == false).ToListAsync();
+            List<DTMC> TMCList = await _context.DTmcs.Where(x => x.IsRederved == false && x.IsUsed == false).ToListAsync();
             List<DTMCModel> res = new List<DTMCModel>();
-            //foreach (DTMC tmc in TMCList)
-            //{
-            //    res.Add(new DTMCModel {  });
-            //}
+            foreach (DTMC tmc in TMCList)
+            {
+                var shelf = await _context.DShelfs.FirstOrDefaultAsync(x => x.Id == tmc.ShelfId);
+                var rack = await _context.DRacks.FirstOrDefaultAsync(x => x.Id == shelf.RackId);
+                var room = await _context.DRooms.FirstOrDefaultAsync(x => x.Id == rack.RoomId);
+                var stock = await _context.DStocks.FirstOrDefaultAsync(x => x.Id == room.StockId);
+                res.Add(new DTMCModel
+                {
+                    Id = tmc.Id,
+                    Guid = tmc.Guid,
+                    Name = tmc.Name,
+                    Description = tmc.Description,
+                    Code = tmc.Code,
+                    Inventorycode = tmc.Inventorycode,
+                    TypeId = tmc.TypeId,
+                    FunctId = tmc.FunctId,
+                    ShelfId = tmc.ShelfId,
+                    UserId = tmc.UserId,
+                    TaskId = tmc.TaskId,
+                    IsRederved = tmc.IsRederved,
+                    IsUsed = tmc.IsUsed,
+                    StockName = stock.StockName,
+                    RoomName = room.RoomName,
+                    RackName = rack.RackName,
+                    ShelfName = shelf.ShelfName
+                });
+            }
+
             return res;
         }
 
         // GET: /getMyTMCList
         [HttpGet]
         [Route("getMyTMCList/{userId}")]
-        public async Task<List<DTMC>> GetMyTMCList(int userId)
+        public async Task<List<DTMCModel>> GetMyTMCList(int userId)
         {
-            //List<TMC> myTMCList = await _context.______.Where(x => x.UserId == userId && x.IsReserved).ToListAsync();
-            List<DTMC> myTMCList = new List<DTMC>();
+            List<DTMC> TMCList = await _context.DTmcs.Where(x => x.UserId == userId && x.IsRederved && x.IsUsed == false).ToListAsync();
+            List<DTMCModel> myTMCList = new List<DTMCModel>();
+
+            foreach (DTMC tmc in TMCList)
+            {
+                var shelf = await _context.DShelfs.FirstOrDefaultAsync(x => x.Id == tmc.ShelfId);
+                var rack = await _context.DRacks.FirstOrDefaultAsync(x => x.Id == shelf.RackId);
+                var room = await _context.DRooms.FirstOrDefaultAsync(x => x.Id == rack.RoomId);
+                var stock = await _context.DStocks.FirstOrDefaultAsync(x => x.Id == room.StockId);
+                myTMCList.Add(new DTMCModel
+                {
+                    Id = tmc.Id,
+                    Guid = tmc.Guid,
+                    Name = tmc.Name,
+                    Description = tmc.Description,
+                    Code = tmc.Code,
+                    Inventorycode = tmc.Inventorycode,
+                    TypeId = tmc.TypeId,
+                    FunctId = tmc.FunctId,
+                    ShelfId = tmc.ShelfId,
+                    UserId = tmc.UserId,
+                    TaskId = tmc.TaskId,
+                    IsRederved = tmc.IsRederved,
+                    IsUsed = tmc.IsUsed,
+                    StockName = stock.StockName,
+                    RoomName = room.RoomName,
+                    RackName = rack.RackName,
+                    ShelfName = shelf.ShelfName
+                });
+            }
+
             return myTMCList;
         }
     }
