@@ -11,12 +11,12 @@ namespace SnowBack.Models
     {
         public string FullInfo => $"{Name} ({Id})";
 
-        public string? StockName { get; set; }
+        //public string? StockName { get; set; }
 
-        public string? RoomName { get; set; }
+        //public string? RoomName { get; set; }
 
-        public string? RackName { get; set; }
+        //public string? RackName { get; set; }
 
-        public string? ShelfName { get; set; }
+        //public string? ShelfName { get; set; }
     }
 }

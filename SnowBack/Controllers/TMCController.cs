@@ -24,10 +24,10 @@ namespace SnowBack.Controllers
             List<DTMCModel> res = new List<DTMCModel>();
             foreach (DTMC tmc in TMCList)
             {
-                var shelf = await _context.DShelfs.FirstOrDefaultAsync(x => x.Id == tmc.ShelfId);
-                var rack = await _context.DRacks.FirstOrDefaultAsync(x => x.Id == shelf.RackId);
-                var room = await _context.DRooms.FirstOrDefaultAsync(x => x.Id == rack.RoomId);
-                var stock = await _context.DStocks.FirstOrDefaultAsync(x => x.Id == room.StockId);
+                //var shelf = await _context.DShelfs.FirstOrDefaultAsync(x => x.Id == tmc.ShelfId);
+                //var rack = await _context.DRacks.FirstOrDefaultAsync(x => x.Id == shelf.RackId);
+                //var room = await _context.DRooms.FirstOrDefaultAsync(x => x.Id == rack.RoomId);
+                //var stock = await _context.DStocks.FirstOrDefaultAsync(x => x.Id == room.StockId);
                 res.Add(new DTMCModel
                 {
                     Id = tmc.Id,
@@ -43,10 +43,10 @@ namespace SnowBack.Controllers
                     TaskId = tmc.TaskId,
                     IsRederved = tmc.IsRederved,
                     IsUsed = tmc.IsUsed,
-                    StockName = stock.StockName,
-                    RoomName = room.RoomName,
-                    RackName = rack.RackName,
-                    ShelfName = shelf.ShelfName
+                    //StockName = stock.StockName,
+                    //RoomName = room.RoomName,
+                    //RackName = rack.RackName,
+                    //ShelfName = shelf.ShelfName
                 });
             }
 
