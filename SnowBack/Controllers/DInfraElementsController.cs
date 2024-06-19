@@ -303,6 +303,22 @@ namespace SnowBack.Controllers
                 {
                     return NotFound();
                 }
+            return Ok(dInfraElement.Element);
+        }
+
+        [HttpPost]
+        [Route("infra/elements/function-edit/")]
+        public async Task<IActionResult> EditFunction([FromBody] DInfraElementsFunction function)
+        {
+            try
+            {
+                _context.Update(function);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest();
+            }
             return Ok();
         }
 

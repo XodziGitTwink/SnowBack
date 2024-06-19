@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SnowBack.Models;
 
-public partial class JSnowGunsOrder
+public partial class JSnowGun
 {
     public int Id { get; set; }
 
@@ -11,15 +11,15 @@ public partial class JSnowGunsOrder
 
     public string? Code { get; set; }
 
-    public int? Point { get; set; }
+    public string? Point { get; set; }
 
     public int? Waterline { get; set; }
 
     public int? Powerline { get; set; }
 
-    public DateOnly? Dateon { get; set; }
+    public byte? Nightorder { get; set; }
 
-    public int? Direction { get; set; }
+    public byte? DayOrder { get; set; }
 
-    public bool Status { get; set; }
+    public DateOnly Dateon { get; set; }
 }

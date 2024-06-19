@@ -61,11 +61,11 @@ public partial class SnowmansContext : DbContext
 
     public virtual DbSet<DTasksKb> DTasksKbs { get; set; }
 
-    public virtual DbSet<DTMC> DTmcs { get; set; }
+    public virtual DbSet<DTmc> DTmcs { get; set; }
 
-    public virtual DbSet<DTMCFunction> DTmcFunctions { get; set; }
+    public virtual DbSet<DTmcFunction> DTmcFunctions { get; set; }
 
-    public virtual DbSet<DTMCType> DTmcTypes { get; set; }
+    public virtual DbSet<DTmcType> DTmcTypes { get; set; }
 
     public virtual DbSet<JElementsState> JElementsStates { get; set; }
 
@@ -74,6 +74,8 @@ public partial class SnowmansContext : DbContext
     public virtual DbSet<JEmployeesSchedule> JEmployeesSchedules { get; set; }
 
     public virtual DbSet<JGoodsMoved> JGoodsMoveds { get; set; }
+
+    public virtual DbSet<JSnowGun> JSnowGuns { get; set; }
 
     public virtual DbSet<JSnowGunsOrder> JSnowGunsOrders { get; set; }
 
@@ -91,7 +93,7 @@ public partial class SnowmansContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=SOFTDEV;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-V09KE4L;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -308,6 +310,11 @@ public partial class SnowmansContext : DbContext
                 .HasMaxLength(512)
                 .HasColumnName("name");
             entity.Property(e => e.Type).HasColumnName("type");
+
+            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElements)
+                .HasForeignKey(d => d.Type)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_D_Infra_Elements_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsField>(entity =>
@@ -333,11 +340,17 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Type).HasColumnName("type");
             entity.Property(e => e.Value).HasColumnName("value");
 
+            entity.HasOne(d => d.Element).WithMany(p => p.DInfraElementsFields)
+                .HasForeignKey(d => d.ElementId)
+                .HasConstraintName("FK_D_Infra_Elements_Fields_D_Infra_Elements");
 
             entity.HasOne(d => d.FieldTypeNavigation).WithMany(p => p.DInfraElementsFields)
                 .HasForeignKey(d => d.FieldType)
                 .HasConstraintName("FK_D_Infra_Elements_Fields_D_DFields_Types");
 
+            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElementsFields)
+                .HasForeignKey(d => d.Type)
+                .HasConstraintName("FK_D_Infra_Elements_Fields_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsFunction>(entity =>
@@ -359,6 +372,14 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Objectid).HasColumnName("objectid");
             entity.Property(e => e.Type).HasColumnName("type");
 
+            entity.HasOne(d => d.Object).WithMany(p => p.DInfraElementsFunctions)
+                .HasForeignKey(d => d.Objectid)
+                .HasConstraintName("FK_D_Infra_Elements_Functions_D_Infra_Elements");
+
+            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElementsFunctions)
+                .HasForeignKey(d => d.Type)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_D_Infra_Elements_Functions_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsKb>(entity =>
@@ -581,7 +602,7 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Relatedobject).HasColumnName("relatedobject");
         });
 
-        modelBuilder.Entity<DTMC>(entity =>
+        modelBuilder.Entity<DTmc>(entity =>
         {
             entity.ToTable("D_TMC");
 
@@ -606,7 +627,7 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.UserId).HasColumnName("userId");
         });
 
-        modelBuilder.Entity<DTMCFunction>(entity =>
+        modelBuilder.Entity<DTmcFunction>(entity =>
         {
             entity.ToTable("D_TMC_Functions");
 
@@ -623,7 +644,7 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.TypeId).HasColumnName("typeId");
         });
 
-        modelBuilder.Entity<DTMCType>(entity =>
+        modelBuilder.Entity<DTmcType>(entity =>
         {
             entity.ToTable("D_TMC_Types");
 
@@ -709,11 +730,11 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.SourceAddr).HasMaxLength(15);
         });
 
-        modelBuilder.Entity<JSnowGunsOrder>(entity =>
+        modelBuilder.Entity<JSnowGun>(entity =>
         {
             entity
                 .HasNoKey()
-                .ToTable("J_SnowGuns_Orders");
+                .ToTable("J_SnowGuns");
 
             entity.Property(e => e.Code)
                 .HasMaxLength(15)
@@ -731,6 +752,24 @@ public partial class SnowmansContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("point");
             entity.Property(e => e.Powerline).HasColumnName("powerline");
+            entity.Property(e => e.Waterline).HasColumnName("waterline");
+        });
+
+        modelBuilder.Entity<JSnowGunsOrder>(entity =>
+        {
+            entity.ToTable("J_SnowGuns_Orders");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Code)
+                .HasMaxLength(15)
+                .IsFixedLength()
+                .HasColumnName("code");
+            entity.Property(e => e.Dateon).HasColumnName("dateon");
+            entity.Property(e => e.Direction).HasColumnName("direction");
+            entity.Property(e => e.Guid).HasColumnName("guid");
+            entity.Property(e => e.Point).HasColumnName("point");
+            entity.Property(e => e.Powerline).HasColumnName("powerline");
+            entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.Waterline).HasColumnName("waterline");
         });
 
