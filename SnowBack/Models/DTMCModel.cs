@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SnowBack.Models
 {
-    public class DTMCModel : DTMC
+    public class DTmcModel : DTmc
     {
         public string FullInfo => $"{Name} ({Id})";
 
