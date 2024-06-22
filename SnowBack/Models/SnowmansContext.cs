@@ -75,8 +75,6 @@ public partial class SnowmansContext : DbContext
 
     public virtual DbSet<JGoodsMoved> JGoodsMoveds { get; set; }
 
-    public virtual DbSet<JSnowGun> JSnowGuns { get; set; }
-
     public virtual DbSet<JSnowGunsOrder> JSnowGunsOrders { get; set; }
 
     public virtual DbSet<JStaffAssign> JStaffAssigns { get; set; }
@@ -311,10 +309,6 @@ public partial class SnowmansContext : DbContext
                 .HasColumnName("name");
             entity.Property(e => e.Type).HasColumnName("type");
 
-            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElements)
-                .HasForeignKey(d => d.Type)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_D_Infra_Elements_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsField>(entity =>
@@ -340,17 +334,11 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Type).HasColumnName("type");
             entity.Property(e => e.Value).HasColumnName("value");
 
-            entity.HasOne(d => d.Element).WithMany(p => p.DInfraElementsFields)
-                .HasForeignKey(d => d.ElementId)
-                .HasConstraintName("FK_D_Infra_Elements_Fields_D_Infra_Elements");
 
             entity.HasOne(d => d.FieldTypeNavigation).WithMany(p => p.DInfraElementsFields)
                 .HasForeignKey(d => d.FieldType)
                 .HasConstraintName("FK_D_Infra_Elements_Fields_D_DFields_Types");
 
-            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElementsFields)
-                .HasForeignKey(d => d.Type)
-                .HasConstraintName("FK_D_Infra_Elements_Fields_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsFunction>(entity =>
@@ -371,15 +359,6 @@ public partial class SnowmansContext : DbContext
                 .HasColumnName("name");
             entity.Property(e => e.Objectid).HasColumnName("objectid");
             entity.Property(e => e.Type).HasColumnName("type");
-
-            entity.HasOne(d => d.Object).WithMany(p => p.DInfraElementsFunctions)
-                .HasForeignKey(d => d.Objectid)
-                .HasConstraintName("FK_D_Infra_Elements_Functions_D_Infra_Elements");
-
-            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.DInfraElementsFunctions)
-                .HasForeignKey(d => d.Type)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_D_Infra_Elements_Functions_D_Infra_Elements_Types");
         });
 
         modelBuilder.Entity<DInfraElementsKb>(entity =>
@@ -730,43 +709,15 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.SourceAddr).HasMaxLength(15);
         });
 
-        modelBuilder.Entity<JSnowGun>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("J_SnowGuns");
-
-            entity.Property(e => e.Code)
-                .HasMaxLength(15)
-                .IsFixedLength()
-                .HasColumnName("code");
-            entity.Property(e => e.Dateon).HasColumnName("dateon");
-            entity.Property(e => e.DayOrder).HasColumnName("dayOrder");
-            entity.Property(e => e.Guid).HasColumnName("guid");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
-            entity.Property(e => e.Nightorder).HasColumnName("nightorder");
-            entity.Property(e => e.Point)
-                .HasMaxLength(15)
-                .IsFixedLength()
-                .HasColumnName("point");
-            entity.Property(e => e.Powerline).HasColumnName("powerline");
-            entity.Property(e => e.Waterline).HasColumnName("waterline");
-        });
-
         modelBuilder.Entity<JSnowGunsOrder>(entity =>
         {
             entity.ToTable("J_SnowGuns_Orders");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Code)
-                .HasMaxLength(15)
-                .IsFixedLength()
-                .HasColumnName("code");
             entity.Property(e => e.Dateon).HasColumnName("dateon");
             entity.Property(e => e.Direction).HasColumnName("direction");
             entity.Property(e => e.Guid).HasColumnName("guid");
+            entity.Property(e => e.GunId).HasColumnName("gun_id");
             entity.Property(e => e.Point).HasColumnName("point");
             entity.Property(e => e.Powerline).HasColumnName("powerline");
             entity.Property(e => e.Status).HasColumnName("status");

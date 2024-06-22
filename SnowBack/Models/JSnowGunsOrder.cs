@@ -9,7 +9,7 @@ public partial class JSnowGunsOrder
 
     public Guid Guid { get; set; }
 
-    public string? Code { get; set; }
+    public int GunId { get; set; }
 
     public int? Point { get; set; }
 
