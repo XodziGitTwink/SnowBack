@@ -75,8 +75,6 @@ public partial class SnowmansContext : DbContext
 
     public virtual DbSet<JGoodsMoved> JGoodsMoveds { get; set; }
 
-    public virtual DbSet<JSnowGun> JSnowGuns { get; set; }
-
     public virtual DbSet<JSnowGunsOrder> JSnowGunsOrders { get; set; }
 
     public virtual DbSet<JStaffAssign> JStaffAssigns { get; set; }
@@ -93,7 +91,7 @@ public partial class SnowmansContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-KRSLVHM;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-V09KE4L;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -310,6 +308,7 @@ public partial class SnowmansContext : DbContext
                 .HasMaxLength(512)
                 .HasColumnName("name");
             entity.Property(e => e.Type).HasColumnName("type");
+
         });
 
         modelBuilder.Entity<DInfraElementsField>(entity =>
@@ -335,9 +334,11 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.Type).HasColumnName("type");
             entity.Property(e => e.Value).HasColumnName("value");
 
+
             entity.HasOne(d => d.FieldTypeNavigation).WithMany(p => p.DInfraElementsFields)
                 .HasForeignKey(d => d.FieldType)
                 .HasConstraintName("FK_D_Infra_Elements_Fields_D_DFields_Types");
+
         });
 
         modelBuilder.Entity<DInfraElementsFunction>(entity =>
@@ -708,43 +709,15 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.SourceAddr).HasMaxLength(15);
         });
 
-        modelBuilder.Entity<JSnowGun>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("J_SnowGuns");
-
-            entity.Property(e => e.Code)
-                .HasMaxLength(15)
-                .IsFixedLength()
-                .HasColumnName("code");
-            entity.Property(e => e.Dateon).HasColumnName("dateon");
-            entity.Property(e => e.DayOrder).HasColumnName("dayOrder");
-            entity.Property(e => e.Guid).HasColumnName("guid");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
-            entity.Property(e => e.Nightorder).HasColumnName("nightorder");
-            entity.Property(e => e.Point)
-                .HasMaxLength(15)
-                .IsFixedLength()
-                .HasColumnName("point");
-            entity.Property(e => e.Powerline).HasColumnName("powerline");
-            entity.Property(e => e.Waterline).HasColumnName("waterline");
-        });
-
         modelBuilder.Entity<JSnowGunsOrder>(entity =>
         {
             entity.ToTable("J_SnowGuns_Orders");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Code)
-                .HasMaxLength(15)
-                .IsFixedLength()
-                .HasColumnName("code");
             entity.Property(e => e.Dateon).HasColumnName("dateon");
             entity.Property(e => e.Direction).HasColumnName("direction");
             entity.Property(e => e.Guid).HasColumnName("guid");
+            entity.Property(e => e.GunId).HasColumnName("gun_id");
             entity.Property(e => e.Point).HasColumnName("point");
             entity.Property(e => e.Powerline).HasColumnName("powerline");
             entity.Property(e => e.Status).HasColumnName("status");
