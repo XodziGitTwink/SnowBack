@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SnowBack.Models
 {
-    public class DTMCLocation
+    public class DTmcLocation
     {
         public int TMCId { get; set; }
         
