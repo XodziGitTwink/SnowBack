@@ -68,8 +68,8 @@ namespace SnowBack.Controllers
 
         // GET: /getMyTMCList
         [HttpGet]
-        [Route("getMyTMCList/{userId?}")]
-        public async Task<List<DTmcModel>> GetMyTMCList(int? userId)
+        [Route("getMyTMCList/{userId}")]
+        public async Task<List<DTmcModel>> GetMyTMCList(int userId)
         {
             List<DTmc> TMCList = await _context.DTmcs.Where(x => x.UserId == userId && x.IsRederved && x.IsUsed == false).ToListAsync();
             List<DTmcModel> myTMCList = new List<DTmcModel>();
@@ -108,7 +108,7 @@ namespace SnowBack.Controllers
 
        //GET: /setReserved
        [HttpGet]
-       [Route("setReserved/{userId?}/{tmcId}")]
+       [Route("setReserved/{userId}/{tmcId}")]
         public async Task<IActionResult> SetReserved(int? userId, int tmcId)
         {
             DTmc tmc = await _context.DTmcs.FirstOrDefaultAsync(x => x.Id == tmcId);
