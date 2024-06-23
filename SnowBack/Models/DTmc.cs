@@ -25,11 +25,11 @@ public partial class DTmc
 
     public bool IsRederved { get; set; }
 
-    public bool IsActive { get; set; } = false;
-
     public bool IsUsed { get; set; }
 
     public int FunctId { get; set; }
 
     public int ShelfId { get; set; }
+
+    public bool IsActive { get; set; }
 }
