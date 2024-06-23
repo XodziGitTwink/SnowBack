@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using SnowBack.Models;
 using System;
@@ -93,6 +94,7 @@ namespace SnowBack.Controllers
                     UserId = tmc.UserId,
                     TaskId = tmc.TaskId,
                     IsRederved = tmc.IsRederved,
+                    IsActive = tmc.IsActive,
                     IsUsed = tmc.IsUsed,
                     StockName = stock.StockName,
                     RoomName = room.RoomName,
@@ -157,6 +159,7 @@ namespace SnowBack.Controllers
             }
 
             tmc.TaskId = taskId;
+            tmc.IsActive = true;
 
             await _context.SaveChangesAsync();
 
@@ -176,6 +179,7 @@ namespace SnowBack.Controllers
             }
 
             tmc.TaskId = null;
+            tmc.IsActive = false;
 
             await _context.SaveChangesAsync();
 
