@@ -139,6 +139,8 @@ namespace SnowBack.Controllers
             }
 
             tmc.UserId = null;
+            tmc.TaskId = null;
+            tmc.IsActive = false;
             tmc.IsRederved = false;
 
             await _context.SaveChangesAsync();
@@ -148,17 +150,19 @@ namespace SnowBack.Controllers
 
         //GET: /setTask
         [HttpGet]
-        [Route("setTask/{taskId?}/{tmcId}")]
-        public async Task<IActionResult> SetTask(int? taskId, int tmcId)
+        [Route("setTask/{userId}/{tmcId}")]
+        public async Task<IActionResult> SetTask(int userId, int tmcId)
         {
+            var jTask = await _context.JTasks.FirstOrDefaultAsync(x => x.Executor == userId && x.IsComplete == false && x.IsActive == true);
+
             DTmc tmc = await _context.DTmcs.FirstOrDefaultAsync(x => x.Id == tmcId);
 
-            if (tmc == null)
+            if (tmc == null || jTask == null)
             {
                 return BadRequest();
             }
 
-            tmc.TaskId = taskId;
+            tmc.TaskId = jTask.Id;
             tmc.IsActive = true;
 
             await _context.SaveChangesAsync();
