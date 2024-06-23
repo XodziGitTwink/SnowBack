@@ -26,6 +26,36 @@ namespace SnowBack.Controllers
         }
 
         [HttpGet]
+        [Route("guns/get-full")]
+        public async Task<List<SnowGunWithFields>> GetWithFileds()
+        {
+            List<SnowGunWithFields> reult = new List<SnowGunWithFields>();
+            var snowGunsOrders = await _context.JSnowGunsOrders.ToListAsync();
+            foreach(var gun in snowGunsOrders) 
+            {
+                var infraElement = await _context.DInfraElements.Where(x => x.Id == gun.GunId).FirstOrDefaultAsync();
+                if(infraElement != null)
+                {
+                    SnowGunWithFields completeGun = new SnowGunWithFields
+                    {
+                        Dateon = gun.Dateon,
+                        Id = gun.Id,
+                        Guid = gun.Guid,
+                        Status = gun.Status,
+                        Direction = gun.Direction,
+                        Point = gun.Point,
+                        Waterline = gun.Waterline,
+                        Powerline = gun.Powerline,
+                        GunId = gun.GunId,
+                        Name = infraElement.Name
+                    };
+                    reult.Add(completeGun);
+                }
+            }
+            return reult;
+        }
+
+        [HttpGet]
         [Route("guns/get/{id}")]
         public async Task<IActionResult> Details(int id)
         {
