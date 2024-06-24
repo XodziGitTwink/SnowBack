@@ -30,6 +30,4 @@ public partial class DTmc
     public int FunctId { get; set; }
 
     public int ShelfId { get; set; }
-
-    public bool IsActive { get; set; }
 }
