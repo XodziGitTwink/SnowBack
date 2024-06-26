@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using SnowBack.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,11 @@ if (app.Environment.IsDevelopment())
 }
 //app.UseHttpsRedirection();
 app.UseCors(builder => builder.AllowAnyOrigin());
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 app.UseAuthorization();
 

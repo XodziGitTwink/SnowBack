@@ -26,6 +26,20 @@ namespace SnowBack.Controllers
         }
 
         [HttpGet]
+        [Route("guns/get-points")]
+        public async Task<List<DInfraElement>> GetPoints()
+        {
+            return await _context.DInfraElements.Where(x => x.Type == 1040).ToListAsync();
+        }
+
+        [HttpGet]
+        [Route("guns/get-functions")]
+        public async Task<List<DInfraElementsFunction>> GetFunctions()
+        {
+            return await _context.DInfraElementsFunctions.Where(x => x.Type == 1039).ToListAsync();
+        }
+
+        [HttpGet]
         [Route("guns/get/{id}")]
         public async Task<IActionResult> Details(int id)
         {

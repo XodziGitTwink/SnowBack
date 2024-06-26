@@ -22,4 +22,6 @@ public partial class JSnowGunsOrder
     public int? Direction { get; set; }
 
     public bool Status { get; set; }
+
+    public int? MainPoint { get; set; }
 }
