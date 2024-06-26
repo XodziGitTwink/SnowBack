@@ -336,7 +336,6 @@ public partial class SnowmansContext : DbContext
             entity.HasOne(d => d.FieldTypeNavigation).WithMany(p => p.DInfraElementsFields)
                 .HasForeignKey(d => d.FieldType)
                 .HasConstraintName("FK_D_Infra_Elements_Fields_D_DFields_Types");
-
         });
 
         modelBuilder.Entity<DInfraElementsFunction>(entity =>

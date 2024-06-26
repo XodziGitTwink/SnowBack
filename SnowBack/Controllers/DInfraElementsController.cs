@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
 using SnowBack.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SnowBack.Controllers
 {
@@ -319,6 +320,21 @@ namespace SnowBack.Controllers
             {
                 return BadRequest();
             }
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("infra/elements/edit-name/{id}/{name}")]
+        public async Task<IActionResult> EditName(int id, string name)
+        {
+            var element = await _context.DInfraElements.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (element==null)
+            {
+                return BadRequest();
+            }
+            element.Name = name;
+            _context.Update(element);
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
