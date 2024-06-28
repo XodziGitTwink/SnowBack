@@ -20,6 +20,8 @@
 
         public bool Status { get; set; }
 
+        public int? MainPoint { get; set; }
         public string? Name { get; set; }
+        public string? PointName { get; set; }
     }
 }

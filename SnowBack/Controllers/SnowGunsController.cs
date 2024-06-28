@@ -36,8 +36,42 @@ namespace SnowBack.Controllers
         [Route("guns/get-functions")]
         public async Task<List<DInfraElementsFunction>> GetFunctions()
         {
-            return await _context.DInfraElementsFunctions.Where(x => x.Type == 1039).ToListAsync();
+            return await _context.DInfraElementsFunctions.Where(x => x.Type == 1039 && x.Objectid == null).ToListAsync();
         }
+
+        [HttpGet]
+        [Route("guns/get-full")]
+        public async Task<List<SnowGunWithFields>> GetWithFileds()
+        {
+            List<SnowGunWithFields> reult = new List<SnowGunWithFields>();
+            var snowGunsOrders = await _context.JSnowGunsOrders.ToListAsync();
+            foreach (var gun in snowGunsOrders)
+            {
+                var infraElement = await _context.DInfraElements.Where(x => x.Id == gun.GunId).FirstOrDefaultAsync();
+                var point = await _context.DInfraElements.Where(x => x.Id == gun.MainPoint).FirstOrDefaultAsync();
+                if (infraElement != null && point != null)
+                {
+                    SnowGunWithFields completeGun = new SnowGunWithFields
+                    {
+                        MainPoint = gun.MainPoint,
+                        Dateon = gun.Dateon,
+                        Id = gun.Id,
+                        Guid = gun.Guid,
+                        Status = gun.Status,
+                        Direction = gun.Direction,
+                        Point = gun.Point,
+                        Waterline = gun.Waterline,
+                        Powerline = gun.Powerline,
+                        GunId = gun.GunId,
+                        Name = infraElement.Name,
+                        PointName = point.Name
+                    };
+                    reult.Add(completeGun);
+                }
+            }
+            return reult;
+        }
+
 
         [HttpGet]
         [Route("guns/get/{id}")]
