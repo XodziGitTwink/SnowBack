@@ -16,4 +16,8 @@ public partial class DGood
     public int Type { get; set; }
 
     public string? Description { get; set; }
+
+    public decimal Remain { get; set; }
+
+    public DateTime DateOn { get; set; }
 }

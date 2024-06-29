@@ -11,17 +11,15 @@ public partial class JTransportRent
 
     public int? Task { get; set; }
 
-    public DateTime? Started { get; set; }
+    public DateTime Started { get; set; }
 
-    public DateTime? Finished { get; set; }
+    public DateTime Finished { get; set; }
 
-    public int? Element { get; set; }
+    public int Element { get; set; }
 
-    public int? Point { get; set; }
+    public int Point { get; set; }
 
     public int Executor { get; set; }
 
     public string? Description { get; set; }
-
-    public int? Rent { get; set; }
 }
