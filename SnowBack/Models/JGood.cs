@@ -38,4 +38,6 @@ public partial class JGood
     public int? DelUser { get; set; }
 
     public DateTime? DelDate { get; set; }
+
+    public decimal Remain { get; set; }
 }

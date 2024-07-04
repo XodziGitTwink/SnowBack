@@ -13,5 +13,7 @@ namespace SnowBack.Models
         public JGood GoodInfo { get; set; }
 
         public DGoodsType GoodType { get; set; }
+
+        public string FullName => $"{Good.Name}";
     }
 }
