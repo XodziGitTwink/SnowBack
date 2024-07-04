@@ -63,6 +63,8 @@ public partial class SnowmansContext : DbContext
 
     public virtual DbSet<JGood> JGoods { get; set; }
 
+    public virtual DbSet<JGoodsMoved> JGoodsMoveds { get; set; }
+
     public virtual DbSet<JSnowGunsOrder> JSnowGunsOrders { get; set; }
 
     public virtual DbSet<JStaffAssign> JStaffAssigns { get; set; }
@@ -79,7 +81,7 @@ public partial class SnowmansContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-KRSLVHM;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=180");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-8JQ2U2H;Initial Catalog=Snowmans;Integrated Security=True;Connect Timeout=100;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -619,28 +621,34 @@ public partial class SnowmansContext : DbContext
             entity.Property(e => e.SourceAddr).HasMaxLength(512);
         });
 
-        modelBuilder.Entity<JSnowGunsOrder>(entity =>
+        modelBuilder.Entity<JGoodsMoved>(entity =>
         {
             entity
                 .HasNoKey()
-                .ToTable("J_SnowGuns_Orders");
+                .ToTable("J_Goods_Moved");
 
-            entity.Property(e => e.Code)
-                .HasMaxLength(15)
-                .IsFixedLength()
-                .HasColumnName("code");
-            entity.Property(e => e.Dateon).HasColumnName("dateon");
-            entity.Property(e => e.DayOrder).HasColumnName("dayOrder");
+            entity.Property(e => e.DateOn).HasColumnType("datetime");
+            entity.Property(e => e.DestinationAddr).HasMaxLength(15);
             entity.Property(e => e.Guid).HasColumnName("guid");
             entity.Property(e => e.Id)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("id");
-            entity.Property(e => e.Nightorder).HasColumnName("nightorder");
-            entity.Property(e => e.Point)
-                .HasMaxLength(15)
-                .IsFixedLength()
-                .HasColumnName("point");
+            entity.Property(e => e.SourceAddr).HasMaxLength(15);
+        });
+
+        modelBuilder.Entity<JSnowGunsOrder>(entity =>
+        {
+            entity.ToTable("J_SnowGuns_Orders");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Dateon).HasColumnName("dateon");
+            entity.Property(e => e.Direction).HasColumnName("direction");
+            entity.Property(e => e.Guid).HasColumnName("guid");
+            entity.Property(e => e.GunId).HasColumnName("gun_id");
+            entity.Property(e => e.MainPoint).HasColumnName("main_point");
+            entity.Property(e => e.Point).HasColumnName("point");
             entity.Property(e => e.Powerline).HasColumnName("powerline");
+            entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.Waterline).HasColumnName("waterline");
         });
 
@@ -706,10 +714,9 @@ public partial class SnowmansContext : DbContext
 
         modelBuilder.Entity<JTransportRent>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("J_Transport_Rent");
+            entity.ToTable("J_Transport_Rent");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.Element).HasColumnName("element");
             entity.Property(e => e.Executor).HasColumnName("executor");
@@ -717,10 +724,8 @@ public partial class SnowmansContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("finished");
             entity.Property(e => e.Guid).HasColumnName("guid");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Point).HasColumnName("point");
+            entity.Property(e => e.Rent).HasColumnName("rent");
             entity.Property(e => e.Started)
                 .HasColumnType("datetime")
                 .HasColumnName("started");
