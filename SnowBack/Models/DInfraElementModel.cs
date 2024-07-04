@@ -9,6 +9,6 @@ namespace SnowBack.Models
 {
     public partial class DInfraElementModel : DInfraElement
     {
-        public string FullInfo => $"{Name} {Code} {Type} ({Id})";
+        public string FullInfo => $"{Name} ({Id})";
     }
 }

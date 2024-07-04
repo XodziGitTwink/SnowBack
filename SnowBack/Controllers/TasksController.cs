@@ -504,7 +504,7 @@ namespace SnowBack.Controllers
             }
 
             DTask dTask = await _context.DTasks.FirstOrDefaultAsync(e => e.Id == jTask.Task);
-            var task = new MTask { Id = jTask.Id, IsActive = jTask.IsActive, ParentId = dTask.Id, Name = dTask.Name, Description = jTask.Description, Executor = jTask.Executor, IsGroup = jTask.IsGroup, GroupId = jTask.GroupId, Priority = jTask.Emergency, Created = jTask.Dateon, PlanTimeToFinish = jTask.Dateoff };
+            var task = new MTask { Id = jTask.Id, IsActive = jTask.IsActive, ParentId = dTask.Id, Name = dTask.Name, Description = jTask.Description, Executor = jTask.Executor, Location = jTask.Element.ToString(), IsGroup = jTask.IsGroup, GroupId = jTask.GroupId, Priority = jTask.Emergency, Created = jTask.Dateon, PlanTimeToFinish = jTask.Dateoff };
             return task;
         }
 

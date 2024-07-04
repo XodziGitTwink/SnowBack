@@ -21,4 +21,9 @@ public partial class DInfraElement
 
     public string? Description { get; set; }
 
+    public virtual ICollection<DInfraElementsField> DInfraElementsFields { get; set; } = new List<DInfraElementsField>();
+
+    public virtual ICollection<DInfraElementsFunction> DInfraElementsFunctions { get; set; } = new List<DInfraElementsFunction>();
+
+    public virtual DInfraElementsType TypeNavigation { get; set; } = null!;
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SnowBack.Models;
 
-public partial class JGoodsMoved
+public partial class JGood
 {
     public int Id { get; set; }
 
@@ -30,4 +30,14 @@ public partial class JGoodsMoved
     public int? UserWhom { get; set; }
 
     public bool Type { get; set; }
+
+    public decimal Qty { get; set; }
+
+    public bool Deleted { get; set; }
+
+    public int? DelUser { get; set; }
+
+    public DateTime? DelDate { get; set; }
+
+    public decimal Remain { get; set; }
 }
