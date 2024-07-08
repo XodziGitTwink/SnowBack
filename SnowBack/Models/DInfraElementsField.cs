@@ -23,9 +23,5 @@ public partial class DInfraElementsField
 
     public int? ElementId { get; set; }
 
-    public virtual DInfraElement? Element { get; set; }
-
     public virtual DDfieldsType? FieldTypeNavigation { get; set; }
-
-    public virtual DInfraElementsType? TypeNavigation { get; set; }
 }

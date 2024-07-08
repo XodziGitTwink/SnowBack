@@ -18,8 +18,4 @@ public partial class DInfraElementsFunction
     public string? Description { get; set; }
 
     public int? Objectid { get; set; }
-
-    public virtual DInfraElement? Object { get; set; }
-
-    public virtual DInfraElementsType TypeNavigation { get; set; } = null!;
 }
