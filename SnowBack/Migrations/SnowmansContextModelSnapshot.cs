@@ -202,11 +202,22 @@ namespace SnowBack.Migrations
 
             modelBuilder.Entity("SnowBack.Models.DGood", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<string>("Code")
                         .HasMaxLength(15)
                         .IsUnicode(false)
                         .HasColumnType("varchar(15)")
                         .HasColumnName("code");
+
+                    b.Property<DateTime>("DateOn")
+                        .HasColumnType("datetime")
+                        .HasColumnName("dateOn");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
@@ -218,22 +229,21 @@ namespace SnowBack.Migrations
                         .HasColumnName("guid")
                         .HasDefaultValueSql("(newid())");
 
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)")
                         .HasColumnName("name");
 
+                    b.Property<decimal>("Remain")
+                        .HasColumnType("decimal(18, 2)")
+                        .HasColumnName("remain");
+
                     b.Property<int>("Type")
                         .HasColumnType("int")
                         .HasColumnName("type");
+
+                    b.HasKey("Id");
 
                     b.ToTable("D_Goods", (string)null);
                 });
@@ -264,8 +274,53 @@ namespace SnowBack.Migrations
                     b.ToTable("D_Goods_Infra_Relations", (string)null);
                 });
 
+            modelBuilder.Entity("SnowBack.Models.DGoodsKb", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("Description")
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Filepath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("filepath");
+
+                    b.Property<Guid?>("Guid")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("guid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(512)")
+                        .HasColumnName("name");
+
+                    b.Property<int>("Relatedobject")
+                        .HasColumnType("int")
+                        .HasColumnName("relatedobject");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("D_Goods_KB", (string)null);
+                });
+
             modelBuilder.Entity("SnowBack.Models.DGoodsType", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<string>("Code")
                         .HasMaxLength(15)
                         .IsUnicode(false)
@@ -282,13 +337,6 @@ namespace SnowBack.Migrations
                         .HasColumnName("guid")
                         .HasDefaultValueSql("(newid())");
 
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Name")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)")
@@ -299,6 +347,8 @@ namespace SnowBack.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(1)")
                         .HasColumnName("type");
+
+                    b.HasKey("Id");
 
                     b.ToTable("D_Goods_Types", (string)null);
                 });
@@ -490,6 +540,44 @@ namespace SnowBack.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("D_Infra_Elements_Functions", (string)null);
+                });
+
+            modelBuilder.Entity("SnowBack.Models.DInfraElementsKb", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("Description")
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Filepath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("filepath");
+
+                    b.Property<Guid?>("Guid")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("guid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(512)")
+                        .HasColumnName("name");
+
+                    b.Property<int>("Relatedobject")
+                        .HasColumnType("int")
+                        .HasColumnName("relatedobject");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("D_Infra_Elements_KB", (string)null);
                 });
 
             modelBuilder.Entity("SnowBack.Models.DInfraElementsParent", b =>
@@ -684,6 +772,44 @@ namespace SnowBack.Migrations
                     b.ToTable("D_Staff", (string)null);
                 });
 
+            modelBuilder.Entity("SnowBack.Models.DStaffKb", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("Description")
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Filepath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("filepath");
+
+                    b.Property<Guid?>("Guid")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("guid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(512)")
+                        .HasColumnName("name");
+
+                    b.Property<int>("Relatedobject")
+                        .HasColumnType("int")
+                        .HasColumnName("relatedobject");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("D_Staff_KB", (string)null);
+                });
+
             modelBuilder.Entity("SnowBack.Models.DTask", b =>
                 {
                     b.Property<int>("Id")
@@ -725,6 +851,44 @@ namespace SnowBack.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("D_Tasks", (string)null);
+                });
+
+            modelBuilder.Entity("SnowBack.Models.DTasksKb", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("Description")
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Filepath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("filepath");
+
+                    b.Property<Guid?>("Guid")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("guid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(512)")
+                        .HasColumnName("name");
+
+                    b.Property<int>("Relatedobject")
+                        .HasColumnType("int")
+                        .HasColumnName("relatedobject");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("D_Tasks_KB", (string)null);
                 });
 
             modelBuilder.Entity("SnowBack.Models.JElementsState", b =>
@@ -841,6 +1005,75 @@ namespace SnowBack.Migrations
                     b.ToTable("J_Employees_Schedule", (string)null);
                 });
 
+            modelBuilder.Entity("SnowBack.Models.JGood", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DelDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("DelUser")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("Destination")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DestinationAddr")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<int?>("Element")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Good")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("guid");
+
+                    b.Property<decimal>("Qty")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("Remain")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<int?>("Source")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SourceAddr")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<int?>("Task")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Type")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserWho")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserWhom")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("J_Goods", (string)null);
+                });
+
             modelBuilder.Entity("SnowBack.Models.JGoodsMoved", b =>
                 {
                     b.Property<DateTime>("DateOn")
@@ -895,24 +1128,6 @@ namespace SnowBack.Migrations
 
             modelBuilder.Entity("SnowBack.Models.JSnowGunsOrder", b =>
                 {
-                    b.Property<string>("Code")
-                        .HasMaxLength(15)
-                        .HasColumnType("nchar(15)")
-                        .HasColumnName("code")
-                        .IsFixedLength();
-
-                    b.Property<DateOnly>("Dateon")
-                        .HasColumnType("date")
-                        .HasColumnName("dateon");
-
-                    b.Property<byte?>("DayOrder")
-                        .HasColumnType("tinyint")
-                        .HasColumnName("dayOrder");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("guid");
-
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -920,23 +1135,43 @@ namespace SnowBack.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<byte?>("Nightorder")
-                        .HasColumnType("tinyint")
-                        .HasColumnName("nightorder");
+                    b.Property<DateOnly?>("Dateon")
+                        .HasColumnType("date")
+                        .HasColumnName("dateon");
 
-                    b.Property<string>("Point")
-                        .HasMaxLength(15)
-                        .HasColumnType("nchar(15)")
-                        .HasColumnName("point")
-                        .IsFixedLength();
+                    b.Property<int?>("Direction")
+                        .HasColumnType("int")
+                        .HasColumnName("direction");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("guid");
+
+                    b.Property<int>("GunId")
+                        .HasColumnType("int")
+                        .HasColumnName("gun_id");
+
+                    b.Property<int?>("MainPoint")
+                        .HasColumnType("int")
+                        .HasColumnName("main_point");
+
+                    b.Property<int?>("Point")
+                        .HasColumnType("int")
+                        .HasColumnName("point");
 
                     b.Property<int?>("Powerline")
                         .HasColumnType("int")
                         .HasColumnName("powerline");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit")
+                        .HasColumnName("status");
+
                     b.Property<int?>("Waterline")
                         .HasColumnType("int")
                         .HasColumnName("waterline");
+
+                    b.HasKey("Id");
 
                     b.ToTable("J_SnowGuns_Orders", (string)null);
                 });
@@ -987,7 +1222,8 @@ namespace SnowBack.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("comment");
 
                     b.Property<int?>("Creator")
                         .HasColumnType("int")
@@ -1060,29 +1296,21 @@ namespace SnowBack.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("description");
+                    b.Property<double?>("Fuelamount")
+                        .HasColumnType("float")
+                        .HasColumnName("fuelamount");
 
-                    b.Property<int>("Good")
+                    b.Property<string>("Fueltype")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("fueltype");
+
+                    b.Property<int?>("Gasstation")
                         .HasColumnType("int")
-                        .HasColumnName("good");
+                        .HasColumnName("gasstation");
 
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("guid");
-
-                    b.Property<int?>("Point")
-                        .HasColumnType("int")
-                        .HasColumnName("point");
-
-                    b.Property<DateTime?>("Started")
-                        .HasColumnType("datetime")
-                        .HasColumnName("started");
-
-                    b.Property<int?>("Task")
-                        .HasColumnType("int")
-                        .HasColumnName("task");
 
                     b.Property<int?>("Userwho")
                         .HasColumnType("int")
@@ -1110,7 +1338,7 @@ namespace SnowBack.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
 
-                    b.Property<int>("Element")
+                    b.Property<int?>("Element")
                         .HasColumnType("int")
                         .HasColumnName("element");
 
@@ -1126,9 +1354,13 @@ namespace SnowBack.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("guid");
 
-                    b.Property<int>("Point")
+                    b.Property<int?>("Point")
                         .HasColumnType("int")
                         .HasColumnName("point");
+
+                    b.Property<int?>("Rent")
+                        .HasColumnType("int")
+                        .HasColumnName("rent");
 
                     b.Property<DateTime?>("Started")
                         .HasColumnType("datetime")
